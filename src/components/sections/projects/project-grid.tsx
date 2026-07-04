@@ -7,8 +7,8 @@ import { projects } from "./project-data";
 import ProjectCard from "./project-card";
 import PopButton from "@/components/ui/pop-button";
 
-const INITIAL_COUNT = 4;
-const LOAD_COUNT = 2;
+const INITIAL_COUNT = 3;
+const LOAD_COUNT = 3;
 
 const cardVariants = {
   hidden: {
@@ -41,8 +41,9 @@ export default function ProjectGrid() {
         className="
           grid
           grid-cols-1
-          gap-8
+          gap-3
           md:grid-cols-2
+          lg:grid-cols-3
         "
       >
         <AnimatePresence mode="popLayout">
@@ -83,38 +84,38 @@ export default function ProjectGrid() {
           }}
           className="mt-14 flex justify-center"
         >
-        <PopButton
-  onClick={() => {
-    const previousCount = visibleCount;
+          <PopButton
+            onClick={() => {
+              const previousCount = visibleCount;
 
-    setVisibleCount((prev) =>
-      Math.min(prev + LOAD_COUNT, projects.length)
-    );
+              setVisibleCount((prev) =>
+                Math.min(prev + LOAD_COUNT, projects.length)
+              );
 
-    setTimeout(() => {
-      if (!gridRef.current) return;
+              setTimeout(() => {
+                if (!gridRef.current) return;
 
-      const newCard = gridRef.current.children[
-        previousCount
-      ] as HTMLElement;
+                const newCard = gridRef.current.children[
+                  previousCount
+                ] as HTMLElement;
 
-      if (!newCard) return;
+                if (!newCard) return;
 
-      const y =
-        newCard.getBoundingClientRect().top +
-        window.pageYOffset -
-        100;
+                const y =
+                  newCard.getBoundingClientRect().top +
+                  window.pageYOffset -
+                  100;
 
-      window.scrollTo({
-        top: y,
-        behavior: "smooth",
-      });
-    }, 500);
-  }}
-  className="px-8 py-3 text-sm"
->
-  Load More Projects
-</PopButton>
+                window.scrollTo({
+                  top: y,
+                  behavior: "smooth",
+                });
+              }, 500);
+            }}
+            className="px-8 py-3 text-sm"
+          >
+            Load More Projects
+          </PopButton>
         </motion.div>
       )}
     </>

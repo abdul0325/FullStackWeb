@@ -78,7 +78,7 @@ export default function ContactForm() {
       initial={{ opacity: 0, x: -40 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className="relative flex h-full flex-col p-8 lg:p-12"
+      className="relative flex h-full flex-col p-5 lg:p-10"
     >
       <div className="relative z-10 flex h-full flex-col">
         {/* Header */}

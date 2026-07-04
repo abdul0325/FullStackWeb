@@ -15,6 +15,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import PopButton from "@/components/ui/pop-button";
+import { Logo } from "./logo";
 
 interface MobileNavProps {
   activeSection: string;
@@ -43,7 +44,7 @@ export function MobileNav({ activeSection }: MobileNavProps) {
         >
           <SheetHeader className="border-b px-6 py-5">
             <SheetTitle className="text-left text-base font-semibold">
-              Menu
+             <Logo />
             </SheetTitle>
           </SheetHeader>
 

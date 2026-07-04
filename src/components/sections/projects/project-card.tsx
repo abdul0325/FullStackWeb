@@ -27,7 +27,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         {/* Ice Gradient Border */}
         <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-cyan-400/25 via-violet-400/25 to-fuchsia-400/20 opacity-0 group-hover:opacity-100 transition-all duration-700" />
 
-        <div className="relative z-10 p-5 lg:p-6">
+        <div className="relative z-10 p-2 lg:p-3">
           {/* Browser Mockup */}
           <div className="overflow-hidden rounded-2xl border border-zinc-100">
             <BrowserFrame
