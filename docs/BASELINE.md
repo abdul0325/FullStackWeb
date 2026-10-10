@@ -65,3 +65,4 @@ bootup 1.7 s — which is the Phase 2 (server-first shell) and Phase 9 work.
 |---|---|---|
 | Before | 541.3 KB | — |
 | 0 | 304.6 KB | WebGL and duplicate animation runtime removed |
+| 1 | 306.9 KB (+2.3) | `next-themes` provider + toggle; CSS 18.5 KB gz. `/styleguide` 273.9 KB |

@@ -1,13 +1,28 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import ClientLayout from "@/components/layout/ClientLayout";
-import { Geist } from "next/font/google";
+import { ThemeProvider } from "@/components/layout/theme-provider";
+import { Geist, Geist_Mono } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+// Both variable, Latin only, self-hosted by next/font. adjustFontFallback (on by
+// default) size-adjusts the system fallback so the swap causes no layout shift.
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+  preload: false, // appears below the fold only
+});
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Abdul Rehman | Full Stack Engineer",
     template: "%s | Abdul Rehman",
@@ -27,9 +42,13 @@ export default function RootLayout({
   children,
 }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn("font-sans", geistSans.variable, geistMono.variable)}
+    >
       <body>
-        <ClientLayout>{children}</ClientLayout>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

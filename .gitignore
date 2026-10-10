@@ -45,3 +45,6 @@ tailwindcss-*.log
 
 # env example is safe to commit
 !.env.example
+
+# private project notes - facts may be cited in docs/, the file itself is never committed
+docs/CV-PROJECT-NOTES.md

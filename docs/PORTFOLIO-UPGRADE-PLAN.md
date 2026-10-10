@@ -594,7 +594,7 @@ faster and more accessible one won.
 | **Code highlighting** | **Shiki, build-time in RSCs** | Zero client JS; replaces the usual 40 KB+ client highlighter |
 | **Forms** | **React Hook Form + Zod, Route Handler send** | Both already dependencies; the Route Handler holds the secret server-side and adds rate limiting and a honeypot |
 | **Syntax for interaction states** | **One `focus-visible` utility, one motion-token set** | Every interactive element — buttons, links, cards, inputs, nav items, toggles — gets designed hover, `:focus-visible`, active/pressed, disabled and loading states using the §3.5 tokens. A component missing a state is a defect, not a polish item |
-| **Quality bar** | **Studio-grade consistency** | Same spacing rhythm, alignment grid, type scale and motion tokens everywhere. The `/design` route is the review surface; anything that looks different from its neighbour without a reason is wrong |
+| **Quality bar** | **Studio-grade consistency** | Same spacing rhythm, alignment grid, type scale and motion tokens everywhere. The `/styleguide` route is the review surface; anything that looks different from its neighbour without a reason is wrong |
 
 ---
 
@@ -818,8 +818,9 @@ fastest way to lose a technical reviewer, and this is a hiring document.
   submit-time check (reject under 2 s), and per-IP rate limiting. The browser never sees
   a key. `@emailjs/browser` is removed; the handler calls the EmailJS REST API directly.
   No CAPTCHA — it costs a third-party script and real conversions.
-- **Credentials:** the previously hardcoded keys are in git history and were rotated on
-  11 October 2026. New values live only in Vercel environment variables and `.env.local`.
+- **Credentials:** the previously hardcoded keys are in public git history. Rotation is a
+  blocking Phase 13 launch item; until then the current keys live only in Vercel
+  environment variables and `.env.local`, never in source.
 - **WhatsApp:** one contact option inside this section, alongside email and the
   scheduling link. The floating bubble is removed.
 - **Success state:** inline success panel replacing the form with a checkmark draw
@@ -1345,27 +1346,37 @@ baseline, without changing how the site looks.
 **Goal:** the token layer, the type scale, dark/light with no flash, and the motion
 constants — everything later phases build on.
 
-- [ ] Replace the colour section of `globals.css` with the §3.2 token set, both themes.
-- [ ] Build the contrast matrix: every `--fg-*` against every `--bg-*`, both themes, recorded
+- [x] Replace the colour section of `globals.css` with the §3.2 token set, both themes.
+- [x] Build the contrast matrix: every `--fg-*` against every `--bg-*`, both themes, recorded
       in `docs/CONTRAST.md`. Adjust any pair below 4.5:1 for body or 3:1 for UI.
-- [ ] Add Geist Mono via `next/font/google`; define `--font-geist-mono`; fix the dangling
+- [x] Add Geist Mono via `next/font/google`; define `--font-geist-mono`; fix the dangling
       `--font-mono` mapping.
-- [ ] Add the §3.3 type scale to `@theme inline`.
-- [ ] Create `src/lib/motion.ts` with `ease`, `duration`, `stagger`, `distance` and the
+- [x] Add the §3.3 type scale to `@theme inline`.
+- [x] Create `src/lib/motion.ts` with `ease`, `duration`, `stagger`, `distance` and the
       shared variants.
-- [ ] Create `src/components/layout/theme-provider.tsx` (`next-themes`,
+- [x] Create `src/components/layout/theme-provider.tsx` (`next-themes`,
       `attribute="data-theme"`, `defaultTheme="dark"`, `enableSystem`,
       `disableTransitionOnChange`) and mount it in the root layout.
-- [ ] Create `src/components/layout/theme-toggle.tsx` with all five states from §3.6.
-- [ ] Create `src/data/site.ts` — name, role, email, socials, availability, location, timezone.
-- [ ] Create `src/types/index.ts`.
-- [ ] Build a `/design` route (not linked, excluded from the sitemap) rendering every token,
-      type size, and both themes side by side. This is the review surface for the rest of
-      the programme.
+- [x] Create `src/components/layout/theme-toggle.tsx` with all five states from §3.6.
+- [x] Create `src/data/site.ts` — name, role, email, socials, availability, location, timezone.
+- [x] Create `src/types/index.ts`.
+- [x] Build a `/styleguide` route (not linked, `noindex`, excluded from the sitemap) rendering
+      every token, type size, and both themes side by side. This is the review surface for the
+      rest of the programme.
+- [x] *(Pulled forward from Phase 2 so the styleguide could show them)* `ui/button.tsx`
+      rewritten with the §3.6 variants and loading state; new `ui/card.tsx` (static /
+      interactive / linked), `ui/badge.tsx`, `ui/input.tsx` (+ `Field`), `ui/textarea.tsx`,
+      `ui/text-link.tsx`. Each with the full state set.
+- [x] *(Sequencing)* `ThemeProvider` ships with `defaultTheme="light"` and `enableSystem={false}`
+      until Phase 7, because the unrebuilt sections hardcode zinc/white classes. One-line flip.
+- [x] *(Found during the phase)* Tailwind v4 has no `--duration-*` namespace; motion durations
+      are exposed as `@utility duration-instant|fast|base|slow` in `globals.css`.
+- [x] *(Found during the phase)* `lucide-react` v1 dropped brand icons (`Github`); brand marks
+      come from `simple-icons` path data as planned in §3.8.
 
 **Files touched:** `src/app/globals.css`, `src/app/layout.tsx`, `src/lib/motion.ts`,
 `src/components/layout/theme-{provider,toggle}.tsx`, `src/data/site.ts`,
-`src/types/index.ts`, `src/app/design/page.tsx`, `docs/CONTRAST.md`.
+`src/types/index.ts`, `src/app/styleguide/page.tsx`, `docs/CONTRAST.md`.
 
 **Acceptance criteria**
 
@@ -1373,15 +1384,15 @@ constants — everything later phases build on.
 - **No flash of the wrong theme** on a hard reload, in either system preference, with CPU
   throttled 4×.
 - Every token pair in `docs/CONTRAST.md` passes its threshold.
-- `/design` renders every token and type size in both themes.
+- `/styleguide` renders every token and type size in both themes.
 - Zero hydration warnings in the console.
 - Build green, JS budget unchanged within 5 KB.
-- **Responsive (§3.7):** `/design` checked at 360, 768 and 1440 — zero horizontal scroll,
+- **Responsive (§3.7):** `/styleguide` checked at 360, 768 and 1440 — zero horizontal scroll,
   no clipped or overflowing type at the clamp floor and ceiling, token swatches reflow
   without overlap. Headings use `text-wrap: balance`.
 
-**How to verify:** hard-reload `/design` ten times in each system preference with 4× CPU
-throttle and watch for a flash; axe DevTools on `/design` in both themes; read the contrast
+**How to verify:** hard-reload `/styleguide` ten times in each system preference with 4× CPU
+throttle and watch for a flash; axe DevTools on `/styleguide` in both themes; read the contrast
 table; check the console on every route.
 
 **Commit:** `feat(design-system): colour tokens, type scale, dual theme and motion constants`
@@ -1407,17 +1418,17 @@ interaction primitives.
 - [ ] Create `ui/reveal.tsx` — the one entrance-animation wrapper, reduced-motion aware,
       `once: true`.
 - [ ] Create `ui/section-header.tsx` and delete all four `sections/*/section-header.tsx` copies.
-- [ ] Extend `ui/button.tsx` with the §3.6 variants and all six states; rebuild `pop-button`'s
-      press feel using transform plus a shadow-layer opacity.
-- [ ] Create `ui/{card,badge,tag,input,textarea,tooltip,copy-button,magnetic}.tsx`, each with
-      its full state set, all rendered on `/design`.
+- [ ] Rebuild `pop-button`'s press feel using transform plus a shadow-layer opacity, or retire
+      it in favour of `ui/button.tsx` (already extended in Phase 1).
+- [ ] Create `ui/{tag,tooltip,copy-button,magnetic}.tsx` with their full state sets and add them
+      to `/styleguide` (`card`, `badge`, `input`, `textarea`, `text-link` landed in Phase 1).
 - [ ] Add `scroll-progress.tsx` and `back-to-top.tsx`.
 - [ ] Add the command palette (`cmdk`), lazy-loaded on first `⌘K`/`Ctrl+K` or button press.
 - [ ] Add `custom-cursor.tsx`, lazy and gated per §5.4.
 - [ ] Wire `@vercel/analytics` and `@vercel/speed-insights`.
 
 **Files touched:** `src/app/layout.tsx`, `src/components/layout/**`, `src/components/ui/**`,
-`src/hooks/**`, `src/data/navigation.ts`, `src/app/design/page.tsx`, `package.json`.
+`src/hooks/**`, `src/data/navigation.ts`, `src/app/styleguide/page.tsx`, `package.json`.
 
 **Acceptance criteria**
 
@@ -1430,17 +1441,17 @@ interaction primitives.
 - `⌘K` opens the palette and its JS is **not** in the initial bundle (confirm in the network
   panel).
 - No custom cursor on touch, below 1024px, or under reduced motion.
-- `/design` shows every primitive in every state, both themes.
+- `/styleguide` shows every primitive in every state, both themes.
 - First-load JS on `/` ≤130 KB.
 - **Responsive (§3.7):** the mobile menu is a designed full-screen menu with focus trap,
   scroll lock and Escape — checked at 280, 360, 768 and 844×390 landscape. Header respects
-  `env(safe-area-inset-top)`. Every primitive on `/design` is clean at 360, 768 and 1440
+  `env(safe-area-inset-top)`. Every primitive on `/styleguide` is clean at 360, 768 and 1440
   with zero horizontal scroll. Hover-only effects are wrapped in
   `@media (hover: hover) and (pointer: fine)`; tap targets ≥44×44px.
 
 **How to verify:** full keyboard walkthrough with the mouse unplugged; DevTools network
 panel filtered to JS before and after the first `⌘K`; `grep -rc "use client" src` and read
-every hit; `npm run build` route table; axe on `/` and `/design`.
+every hit; `npm run build` route table; axe on `/` and `/styleguide`.
 
 **Commit:** `refactor(shell): server-first layout, accessible nav, shared motion primitives`
 
@@ -1682,7 +1693,7 @@ network panel filtered to `google`.
 - [ ] Add JSON-LD: `Person` and `WebSite` in the root layout, `CreativeWork` per project page.
 - [ ] Create `app/sitemap.ts` (every static route plus every project slug, with `lastModified`)
       and `app/robots.ts`.
-- [ ] Exclude `/design` from the sitemap and add `noindex` to it.
+- [ ] Exclude `/styleguide` from the sitemap and add `noindex` to it.
 - [ ] Add descriptive `alt` text to every project screenshot.
 - [ ] Add the Content Security Policy to `next.config.mjs`, now that the third-party list is final.
 
@@ -1878,14 +1889,18 @@ two posts are actually ready.
 - [ ] Final content proofread: every number re-checked against `docs/CV-PROJECT-NOTES.md`;
       no placeholder, no lorem, no `TODO`, no unresolved `§9` item on a public page.
 - [ ] Confirm nothing from §I of the CV notes (the unconfirmed list) has leaked onto the site.
-- [ ] Delete `/design`, or keep it `noindex` and unlinked — decide and record.
+- [ ] Delete `/styleguide`, or keep it `noindex` and unlinked — decide and record.
 - [ ] Confirm the console is clean on every route in every browser.
 - [ ] Verify the CSP triggers no violation in any browser.
 - [ ] Final Lighthouse: all four categories, every route, mobile and desktop. Record in
       `docs/BASELINE.md`.
 - [ ] Verify analytics events fire: CV download, contact submit, palette open, outbound click.
 - [ ] Test the contact form end to end from a real device and confirm the email arrives.
-- [ ] Confirm the EmailJS keys were rotated after the Phase 0 exposure.
+- [ ] **BLOCKING — launch cannot happen until this is ticked.** Rotate the EmailJS keys
+      (the old service id, template id and public key are in public git history), update
+      `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATE_KEY`
+      in Vercel env vars (**Preview and Production**) and in `.env.local`, redeploy, and
+      re-test the contact form end to end on the preview and on production.
 - [ ] Update `README.md` and `CLAUDE.md` to describe the new architecture.
 - [ ] Final `docs/BASELINE.md` comparison table: before and after, every metric.
 - [ ] Present the `flash` preview URL for approval.
@@ -1983,9 +1998,8 @@ Nothing below can be invented. Anything still unchecked when its phase arrives g
 
 ### Operational
 
-- [x] **Rotate the EmailJS keys.** Reported rotated 11 Oct 2026. New values go in Vercel env
-      vars (`EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY`,
-      `EMAILJS_PRIVATE_KEY`) and local `.env.local`. **Still needed: set them in Vercel.**
+- [ ] **Rotate the EmailJS keys — postponed to launch, blocking item in Phase 13.** The
+      current (exposed) keys are set in Vercel env vars for now so the preview form works.
 - [x] **Confirm the production domain** — `abdulfullstackdev.vercel.app` (11 Oct 2026).
       Held in `src/lib/site.ts` → `SITE_URL`.
 - [ ] **Vercel Analytics** — enabled on the project?
@@ -2003,7 +2017,7 @@ Nothing below can be invented. Anything still unchecked when its phase arrives g
 | 2 | Disclose AI co-authorship? | **Yes.** On the case-study page, framed as how the work is done with AI tooling — review, tests and removal proofs — not as a caveat |
 | 3 | Lenis? | **Measured trial in Phase 9** behind a flag; keep only if INP stays <200 ms on a real mid-range Android with no regressions. Default: remove |
 | 4 | WebGL? | **Removed completely** — `three`, `@react-three/fiber`, `@react-three/drei`, `maath`. Static SVG noise plus one CSS glow. No WebGL anywhere on the site |
-| 5 | EmailJS send path? | **Route Handler** with server-only env vars, Zod validation, honeypot, rate limiting. Keys rotated 11 October 2026 |
+| 5 | EmailJS send path? | **Route Handler** with server-only env vars, Zod validation, honeypot, rate limiting. Key rotation postponed to launch — blocking item in Phase 13 |
 | 6 | How many projects? | **All twelve kept.** mrosew.com is the featured case study; six on the homepage teaser, all twelve on `/projects` |
 | 7 | Custom cursor? | **Yes**, desktop-gated, conservative |
 | 8 | Blog? | **Plumbing in Phase 12, unlinked until two posts exist** |
