@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description:
     "Full Stack Engineer specializing in AI-powered SaaS platforms, scalable backend systems, and modern web applications.",
   icons: {
-    icon: "/pictures/weblogo.png",
+    icon: "/favicon.png",
   },
 };
 

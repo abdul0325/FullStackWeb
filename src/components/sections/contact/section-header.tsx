@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export default function SectionHeader() {
     return (
@@ -30,7 +30,7 @@ export default function SectionHeader() {
             </h2>
 
             <p className="mx-auto mt-6 max-w-xl text-lg text-zinc-600">
-                From pixel-perfect frontends to robust backend architecture — let's turn your vision into a high-impact product.
+                From pixel-perfect frontends to robust backend architecture — let&apos;s turn your vision into a high-impact product.
             </p>
         </motion.div>
     );

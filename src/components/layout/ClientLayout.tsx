@@ -2,13 +2,12 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/Footer";
 import Loader from "@/components/layout/Loader";
-import WhatsappButton from "@/components/layout/WhatsappButton";
-import { StarsCanvas } from "@/components/layout/Star_Background";
+import { Background } from "@/components/layout/background";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -53,13 +52,8 @@ export default function ClientLayout({
 
   return (
     <>
-      {/* Decorative Background */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 -z-10"
-      >
-        <StarsCanvas />
-      </div>
+      {/* Decorative Background — static noise + one glow, no WebGL */}
+      <Background />
 
       <div className="relative min-h-screen overflow-x-hidden">
         <Navbar />
@@ -80,8 +74,6 @@ export default function ClientLayout({
         </AnimatePresence>
 
         <Footer />
-
-        <WhatsappButton className="fixed bottom-6 right-6 z-50" />
       </div>
     </>
   );

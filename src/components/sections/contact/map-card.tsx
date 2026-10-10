@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { MapPin, Clock, Globe } from "lucide-react";
 
 export default function MapCard() {

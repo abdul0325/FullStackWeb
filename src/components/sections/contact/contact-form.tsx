@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import {
   User,
   Mail,
@@ -14,9 +13,12 @@ import PopButton from "../../ui/pop-button";
 
 export default function ContactForm() {
   const form = useRef<HTMLFormElement>(null);
+  // Set on mount; the API rejects submissions faster than its minimum fill time.
+  const startedAt = useRef(0);
 
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +26,10 @@ export default function ContactForm() {
     subject: "",
     message: "",
   });
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -41,15 +47,28 @@ export default function ContactForm() {
 
     if (!form.current) return;
 
+    const honeypot =
+      (form.current.elements.namedItem("company") as HTMLInputElement | null)?.value ?? "";
+
     try {
       setLoading(true);
+      setError(null);
 
-      await emailjs.sendForm(
-        "service_x2wni6v",
-        "template_nldzver",
-        form.current,
-        "kiu_QdEqMwhbnxRNz"
-      );
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          company: honeypot,
+          startedAt: startedAt.current,
+        }),
+      });
+
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error ?? `Request failed (${res.status})`);
+      }
 
       setSent(true);
 
@@ -63,9 +82,9 @@ export default function ContactForm() {
       setTimeout(() => {
         setSent(false);
       }, 3000);
-    } catch (error) {
-      console.error("EmailJS Error:", error);
-      alert("Failed to send message. Please try again.");
+    } catch (err) {
+      console.error("Contact form error:", err);
+      setError("Failed to send message. Please try again or email me directly.");
     } finally {
       setLoading(false);
     }
@@ -81,6 +100,19 @@ export default function ContactForm() {
       className="relative flex h-full flex-col p-5 lg:p-10"
     >
       <div className="relative z-10 flex h-full flex-col">
+        {/* Honeypot — invisible to people, filled by bots. Rejected server-side. */}
+        <div aria-hidden="true" className="absolute -left-[9999px] top-0 h-px w-px overflow-hidden">
+          <label htmlFor="contact-company">Company</label>
+          <input
+            id="contact-company"
+            type="text"
+            name="company"
+            tabIndex={-1}
+            autoComplete="off"
+            defaultValue=""
+          />
+        </div>
+
         {/* Header */}
 
         <div className="mb-10">
@@ -93,7 +125,7 @@ export default function ContactForm() {
           </div>
 
           <h3 className="text-3xl font-bold tracking-tighter text-zinc-900 lg:text-4xl">
-            Let's create
+            Let&apos;s create
             <br />
             <span className="bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-600 bg-clip-text text-transparent">
               the extraordinary
@@ -184,6 +216,14 @@ export default function ContactForm() {
             />
           </div>
         </div>
+
+        {/* Status */}
+
+        {error && (
+          <p role="alert" className="mt-6 text-sm text-red-600">
+            {error}
+          </p>
+        )}
 
         {/* Button */}
 

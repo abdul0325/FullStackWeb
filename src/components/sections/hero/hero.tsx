@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { PopButton } from "@/components/ui/pop-button"
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
@@ -94,14 +94,15 @@ export default function Hero() {
     </PopButton>
   </Link>
 
-  <Link
+  <a
     href="/resume/AbdulRehman_FullStack.pdf"
     target="_blank"
+    rel="noopener noreferrer"
   >
     <PopButton>
       Resume
     </PopButton>
-  </Link>
+  </a>
 </div>
 
                     </motion.div>

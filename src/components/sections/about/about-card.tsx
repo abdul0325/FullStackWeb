@@ -1,13 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import {
   MapPin,
   GraduationCap,
   BriefcaseBusiness,
   Rocket,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
 import PopButton from "@/components/ui/pop-button";
@@ -60,11 +59,11 @@ sm:h-24 sm:w-24
     "
         >
           <Image
-            src="/pictures/ab.jpeg" // Your image path
+            src="/pictures/ab.webp"
             alt="Abdul Rehman"
             fill
             className="rounded-full object-cover"
-            priority
+            sizes="(max-width: 1024px) 60vw, 320px"
           />
         </div>
       </div>
@@ -120,15 +119,16 @@ sm:h-24 sm:w-24
       <div className="my-4 h-px" />
 
       <div className="mt-6 flex justify-center">
-        <Link
+        <a
           href="/resume/AbdulRehman_FullStack.pdf"
           target="_blank"
+          rel="noopener noreferrer"
           className="w-full"
         >
           <PopButton className="w-full justify-center py-3 text-sm">
             Resume
           </PopButton>
-        </Link>
+        </a>
       </div>
       {/* Status */}
 

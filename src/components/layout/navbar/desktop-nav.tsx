@@ -58,7 +58,7 @@ export function DesktopNav({
       </nav>
 
       {/* Resume Button */}
-      <Link href="/resume/AbdulRehman_FullStack.pdf">
+      <a href="/resume/AbdulRehman_FullStack.pdf" target="_blank" rel="noopener noreferrer">
         <CreepyButton
           coverClassName="
             bg-zinc-900 
@@ -70,7 +70,7 @@ export function DesktopNav({
         >
           Resume
         </CreepyButton>
-      </Link>
+      </a>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ArrowLeft, Home } from "lucide-react";
 
 export default function NotFound() {
@@ -60,7 +60,7 @@ export default function NotFound() {
                 </h2>
 
                 <p className="mx-auto mt-4 max-w-lg text-lg leading-relaxed text-zinc-600">
-                    The page you're looking for doesn't exist, may have been moved, or the
+                    The page you&apos;re looking for doesn&apos;t exist, may have been moved, or the
                     URL is incorrect.
                 </p>
 

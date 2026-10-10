@@ -74,15 +74,16 @@ export function MobileNav({ activeSection }: MobileNavProps) {
 
           <div className="border-t px-6 py-5 flex justify-center">
             <div className="w-[60%] flex justify-center">
-              <Link
+              <a
                 href="/resume/AbdulRehman_FullStack.pdf"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-full"
               >
                 <PopButton className="w-full flex justify-center py-3 text-sm">
                   Resume
                 </PopButton>
-              </Link>
+              </a>
             </div>
           </div>
         </SheetContent>

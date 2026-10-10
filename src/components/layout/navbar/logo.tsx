@@ -8,11 +8,10 @@ export function Logo() {
       className="flex items-center gap-3"
     >
       <Image
-        src="/pictures/weblogo.png"
+        src="/pictures/weblogo.webp"
         alt="Abdul Rehman"
         width={42}
         height={42}
-        priority
         className="rounded-full"
       />
 

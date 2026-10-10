@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Globe } from "lucide-react";
 
 interface BrowserFrameProps {
@@ -112,7 +112,7 @@ export default function BrowserFrame({
             src={image}
             alt={title}
             fill
-            priority={false}
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover"
           />
         </motion.div>

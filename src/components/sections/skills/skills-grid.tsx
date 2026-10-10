@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import SkillCard from "./skill-card";
 import { skillCategories } from "./skills-data";

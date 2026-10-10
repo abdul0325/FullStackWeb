@@ -64,7 +64,7 @@ export default function Skills() {
           inset-0
           opacity-[0.02]
           mix-blend-soft-light
-          [background-image:url('/preview.png')]
+          [background-image:url('/preview.webp')]
         "
       />
 

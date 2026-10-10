@@ -2,7 +2,7 @@
 
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import SectionHeader from "./section-header";
 import ContactForm from "./contact-form";
 import MapCard from "./map-card";

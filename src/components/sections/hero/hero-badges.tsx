@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { techStack } from "@/data/tech-stack";
 import TechBadge from "@/components/ui/tech-badge";
 

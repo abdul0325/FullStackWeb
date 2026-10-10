@@ -22,7 +22,7 @@ Building modern, scalable, and high-performance web applications with a strong f
 ---
 
 <p align="center">
-<img src="./public/preview.png" alt="Portfolio Preview" width="100%">
+<img src="./public/preview.webp" alt="Portfolio Preview" width="100%">
 </p>
 
 ---
@@ -113,7 +113,7 @@ src
 
 public
 │
-├── preview.png
+├── preview.webp
 ├── projects
 ├── resume
 └── images

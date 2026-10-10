@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, Circle } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const logs = [
   "Edge Runtime initialized",

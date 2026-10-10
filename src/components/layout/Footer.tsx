@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ArrowUp, Mail } from "lucide-react";
 import { FaGithub, FaLinkedin, FaFacebookMessenger } from "react-icons/fa";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { CheckCircle2 } from "lucide-react";
 
 const builds = [
@@ -51,7 +51,7 @@ export default function AboutStory() {
         </p>
 
         <p>
-          Over the past two years, I've built{" "}
+          Over the past two years, I&apos;ve built{" "}
           <span className="font-semibold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-600 bg-clip-text text-transparent">full stack SaaS platforms</span>,{" "}
           <span className="font-semibold bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-600 bg-clip-text text-transparent">AI-powered applications</span>,{" "}
           REST APIs, authentication systems, and cloud deployments using modern technologies 

@@ -117,7 +117,7 @@ The outcome is a site that is both the proof and the demonstration. The case stu
 | `sections/*/section-header.tsx` | 36–96 | — | **Four separate, mutually diverged copies**, confirmed by checksum. One concept implemented four times |
 | `ui/section.tsx`, `ui/container.tsx` | 22 / 22 | Genuinely good primitives. Keep both unchanged | — |
 | `ui/pop-button.tsx` | 51 | Chunky 3D press effect with real character | Animates `box-shadow` and `border-color` on hover — neither is compositor-friendly |
-| `ui/creepy-resume-button.tsx` | 170 | — | Imported by nothing. 170 LOC of dead code |
+| `ui/creepy-resume-button.tsx` | 170 | Distinctive hover reveal | 170 LOC for the single navbar "Resume" button (`desktop-nav.tsx`). Replaced by a `ui/button.tsx` variant in Phase 2 |
 | `ui/tech-badge.tsx` | 273 | — | 273 LOC for a badge; the largest file in `ui/` |
 | `ui/button.tsx`, `ui/sheet.tsx` | 67 / 147 | Standard shadcn output, fine | — |
 | `app/not-found.tsx` | 85 | Decent 404 design | Hardcoded `bg-white` and `zinc` classes — will look broken once dark mode exists. Imports `Home` and never uses it. `history.back()` with no fallback when there is no history |
@@ -233,7 +233,8 @@ Ranked by expected impact.
 
 - `src/lib/cn.ts` — duplicate of `lib/utils.ts`.
 - `src/lib/constants.ts` — `NAV_ITEMS` is a stale duplicate, `MAX_WIDTH` is unused.
-- `src/components/ui/creepy-resume-button.tsx` — unused, 170 LOC.
+- `src/components/ui/creepy-resume-button.tsx` — 170 LOC for one navbar button; replaced
+  by a `ui/button.tsx` variant in Phase 2 (it is still in use until then).
 - The Google Maps iframe in `map-card.tsx` — replaced by a static location/timezone block.
 - `tailwindcss-37200.log` and `tsconfig.tsbuildinfo`; add both to `.gitignore`.
 - The duplicated availability-badge markup in `hero.tsx`.
@@ -1267,40 +1268,48 @@ Rules for every phase:
 **Goal:** remove the dead weight, add the quality gates, and get an honest performance
 baseline, without changing how the site looks.
 
-- [ ] Capture a baseline: Lighthouse mobile on the live site, and `npm run build`
+- [x] Capture a baseline: Lighthouse mobile on the live site, and `npm run build`
       per-route JS. Paste both into `docs/BASELINE.md`.
-- [ ] Add `"typecheck": "tsc --noEmit"` to `package.json` scripts.
-- [ ] Add `.github/workflows/ci.yml`: typecheck → lint → build on push to `flash`.
-- [ ] Delete `src/lib/cn.ts`; repoint any import to `@/lib/utils`.
-- [ ] Delete `src/lib/constants.ts`.
-- [ ] Delete `src/components/ui/creepy-resume-button.tsx`.
-- [ ] Remove `tailwindcss-37200.log` and `tsconfig.tsbuildinfo` from git; add both to
-      `.gitignore`.
-- [ ] Remove dependencies: `gsap`, `framer-motion`, `react-intersection-observer`,
+- [x] Add `"typecheck": "tsc --noEmit"` to `package.json` scripts.
+- [x] Add `.github/workflows/ci.yml`: typecheck → lint → build on push to `flash`.
+- [x] Delete `src/lib/cn.ts`; repoint any import to `@/lib/utils`.
+- [x] Delete `src/lib/constants.ts`.
+- [x] ~~Delete `src/components/ui/creepy-resume-button.tsx`~~ — still used by
+      `desktop-nav.tsx`; deferred to Phase 2 where `ui/button.tsx` replaces it.
+- [x] Remove `tailwindcss-37200.log` from git and add a pattern to `.gitignore`
+      (`tsconfig.tsbuildinfo` was already untracked and ignored).
+- [x] Remove dependencies: `gsap`, `framer-motion`, `react-intersection-observer`,
       `@emailjs/browser`. Move `shadcn` to `devDependencies`. Repoint every
       `framer-motion` import to `motion/react`. (`simple-icons` stays — it becomes the
       brand-logo source in Phase 6; `react-icons` goes in Phase 6 with the skills rebuild.)
-- [ ] Replace `Star_Background.tsx` with `components/layout/background.tsx` — an inline SVG
+- [x] Replace `Star_Background.tsx` with `components/layout/background.tsx` — an inline SVG
       noise data URI plus one CSS radial glow, both `pointer-events-none fixed`. Remove
       `three`, `@react-three/fiber`, `@react-three/drei`, `maath`, `@types/three`. No WebGL
       anywhere on the site.
-- [ ] Add the `prefers-reduced-motion` CSS fallback block to `globals.css`.
-- [ ] Remove `a { cursor: pointer !important }` from `globals.css`.
-- [ ] Re-encode every image in `public/projects/` to ≤1600px WebP at ≤200 KB; replace the
+- [x] Add the `prefers-reduced-motion` CSS fallback block to `globals.css`.
+- [x] Remove `a { cursor: pointer !important }` from `globals.css`.
+- [x] Re-encode every image in `public/projects/` to ≤1600px WebP at ≤200 KB; replace the
       42×42 logo asset; delete `public/resume/AbdulRehman_FullStack.docx`.
-- [ ] Add `sizes` to every `fill` image; remove `priority` from the logo and the about portrait.
-- [ ] Set `next.config.mjs`: `images.formats`, `poweredByHeader: false`, and the security
+- [x] Add `sizes` to every `fill` image; remove `priority` from the logo and the about portrait.
+- [x] Set `next.config.mjs`: `images.formats`, `poweredByHeader: false`, and the security
       headers from §6.9 **except** the CSP.
-- [ ] Create `src/lib/site.ts` exporting `SITE_URL` from `NEXT_PUBLIC_SITE_URL` with
+- [x] Create `src/lib/site.ts` exporting `SITE_URL` from `NEXT_PUBLIC_SITE_URL` with
       `https://abdulfullstackdev.vercel.app` as the fallback.
-- [ ] Create `src/lib/env.ts` (server-only, validated) and `POST /api/contact` as a Route
+- [x] Create `src/lib/env.ts` (server-only, validated) and `POST /api/contact` as a Route
       Handler: Zod-validated body, honeypot field, minimum submit-time check, per-IP rate
       limit, EmailJS REST call with server-only keys. Point `contact-form.tsx` at it.
       Remove every hardcoded key from the source. Add `.env.example`.
-- [ ] Remove the floating `WhatsappButton` from the layout (it returns inside the Contact
+- [x] Remove the floating `WhatsappButton` from the layout (it returns inside the Contact
       section in Phase 7).
-- [ ] Confirm the EmailJS keys were rotated (user reported done 11 October 2026). If not,
+- [x] Confirm the EmailJS keys were rotated (user reported done 11 October 2026). If not,
       remind at the end of the phase.
+- [x] *(Found during the phase)* Every `<Link href="…pdf">` replaced with a plain `<a>` —
+      `next/link` was prefetching the 561 KB PDF as an RSC payload on every page load.
+- [x] *(Found during the phase)* `public/preview.png` (409 KB) was loading as a CSS
+      background in `skills.tsx`; re-encoded to a 32 KB WebP and repointed.
+- [x] *(Found during the phase)* `src/app/[...slug]/page.tsx` removed — the local prod
+      server returned HTTP 200 for unknown paths with it in place. The App Router's
+      built-in `not-found.tsx` handling returns a true 404 without it.
 
 **Files touched:** `package.json`, `next.config.mjs`, `.gitignore`, `tsconfig.json`,
 `.github/workflows/ci.yml`, `src/app/globals.css`, `src/lib/{cn,constants}.ts` (deleted),
