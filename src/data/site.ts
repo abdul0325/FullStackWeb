@@ -20,7 +20,7 @@ export const site = {
   },
   availability: {
     /** Shown on the badge. Wording pending confirmation (§9). */
-    label: "Available for Full Stack & AI Projects",
+    label: "Open to backend & full-stack roles",
     open: true,
   },
   socials: {

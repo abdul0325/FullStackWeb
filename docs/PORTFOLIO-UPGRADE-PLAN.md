@@ -1580,20 +1580,38 @@ and reload.
 
 **Goal:** the single artefact that makes the portfolio senior.
 
-- [ ] Create `src/content/projects/index.ts` with the extended `Project` type and registry.
-- [ ] Write `src/content/projects/mrosew-backend.ts` — every §4.5 block, facts only from
+- [x] Create `src/content/projects/index.ts` with the extended `Project` type and registry.
+- [x] Write `src/content/projects/mrosew-backend.ts` — every §4.5 block, facts only from
       `docs/CV-PROJECT-NOTES.md`, using the anonymised variant if §10 decides against naming
       the client.
-- [ ] Build the `components/case-study/` primitives: `case-header`, `case-section`,
+- [x] Build the `components/case-study/` primitives: `case-header`, `case-section`,
       `hard-problem`, `metric-row`, `code-block`.
-- [ ] Add Shiki as a build-time highlighter in `lib/shiki.ts`; `code-block.tsx` renders static
+- [x] Add Shiki as a build-time highlighter in `lib/shiki.ts`; `code-block.tsx` renders static
       HTML with zero client JS.
-- [ ] Hand-author `architecture-diagram.tsx` as inline SVG — theme-aware, `role="img"`, an
+- [x] Hand-author `architecture-diagram.tsx` as inline SVG — theme-aware, `role="img"`, an
       `aria-label`, and a `<figcaption>` describing it in prose.
-- [ ] Build `app/projects/[slug]/page.tsx` with `generateStaticParams` and `generateMetadata`.
-- [ ] Build `featured-case.tsx` — the homepage teaser linking through.
-- [ ] Add the sticky sub-navigation on `lg`, driven by `IntersectionObserver`.
-- [ ] Add the SVG connector draw animation, static under reduced motion.
+- [x] Build `app/projects/[slug]/page.tsx` with `generateStaticParams` and `generateMetadata`.
+- [x] Build `featured-case.tsx` — the homepage teaser linking through.
+- [x] Add the sticky sub-navigation on `lg`, driven by `IntersectionObserver`.
+- [x] Add the SVG connector draw animation, static under reduced motion.
+- [x] *(Decision)* Built **anonymised** (CV notes §H); client name, URL, API host and logo live in
+      `src/content/client.ts` behind `named: false` — naming later is a content swap. The hero
+      lede and proof panel no longer name the host.
+- [x] *(Confidentiality)* Withheld: internal hostnames/ports, infra and env names, internal
+      document names, colleagues, the single-instance risk. Only found-and-fixed problems are
+      described, at the level of the idea. Open items for the owner are listed in the content
+      file under `toConfirm`.
+- [x] *(Route)* `/projects/[slug]` in the `(site)` group — SSG via `generateStaticParams`, per-page
+      metadata and canonical. Nav hrefs became absolute (`/#about`) so they work from any route.
+- [x] *(Found during the phase)* `Reveal` as a client boundary pushed above-the-fold prose to
+      `opacity:0` until hydration (case-page LCP 4.6 s under real throttling) and serialised every
+      wrapped child into the RSC payload. Rewritten as a zero-JS CSS scroll-driven animation
+      (`animation-timeline: view()`, fixed 240 px range, static fallback). LCP = FCP since.
+- [x] *(Found during the phase)* `overflow-x-hidden` on `main` made it a scroll container and
+      silently broke `position: sticky` (the ToC). Now `overflow-x-clip`.
+- [x] *(Found during the phase)* The 38.7 KB "polyfill" chunk in the first-load figure is
+      `noModule` — never downloaded by modern browsers. Real first-load JS: case page ≈ 280 KB,
+      home ≈ 322 KB. The measurement script now excludes it.
 
 **Files touched:** `src/content/projects/**`, `src/components/case-study/**`,
 `src/components/sections/featured/**`, `src/app/projects/[slug]/page.tsx`,

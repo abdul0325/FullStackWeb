@@ -47,7 +47,7 @@ export function NavDesktop({ className }: { className?: string }) {
   return (
     <nav ref={navRef} aria-label="Primary" className={cn("relative hidden items-center gap-1 lg:flex", className)}>
       {navigation.map((item) => {
-        const id = item.href.replace("#", "");
+        const id = item.href.split("#")[1];
         const isActive = active === id;
         return (
           <Link

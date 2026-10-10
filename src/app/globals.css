@@ -454,3 +454,70 @@ html[data-custom-cursor="on"] :is(input, textarea, select, [contenteditable]) {
   .animate-fade-up, .animate-fade-in { animation: none; opacity: 1; transform: none; }
   .animate-marquee { animation: none; }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Case study: build-time Shiki dual theme, diagram draw-in            */
+/* ------------------------------------------------------------------ */
+
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: transparent !important;
+}
+[data-theme="dark"] .shiki,
+[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark);
+}
+.shiki code {
+  display: block;
+  counter-reset: line;
+}
+.shiki .line {
+  display: inline-block;
+  width: 100%;
+}
+
+/* Diagram connectors draw in once the figure enters the viewport */
+.draw-in [data-draw] {
+  stroke-dasharray: var(--len, 600);
+  stroke-dashoffset: var(--len, 600);
+}
+.draw-in[data-inview] [data-draw] {
+  animation: draw-line var(--duration-slow) var(--ease-out-expo) forwards;
+  animation-delay: var(--delay, 0ms);
+}
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .draw-in [data-draw] {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reveal — zero-JS scroll-driven entrance (ui/reveal.tsx)             */
+/*  Static everywhere else: unsupported browsers and reduced motion.   */
+/* ------------------------------------------------------------------ */
+
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(var(--reveal-y, 16px)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up var(--ease-out-expo) both;
+      animation-timeline: view();
+      /* Fixed-length range: the reveal completes within ~240px of scroll after the
+         element enters, however tall the element is. */
+      animation-range: entry var(--reveal-start, 0px) entry calc(var(--reveal-start, 0px) + 240px);
+    }
+    @media (max-width: 1023px) {
+      .reveal { --reveal-y: 8px; }
+    }
+  }
+}

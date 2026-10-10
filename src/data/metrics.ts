@@ -30,7 +30,8 @@ export const caseStudyMetrics: Metric[] = [
 
 /** Facts for the hero proof panel — strings, not count-ups. */
 export const proofPanelLines = [
-  { key: "host", value: "api.mrosew.com", note: "live", source: "CV notes §7" },
+  // Host stays generic while the client is anonymised (src/content/client.ts).
+  { key: "status", value: "production API", note: "live", source: "CV notes §7" },
   { key: "stack", value: "NestJS 11 · PostgreSQL 16 · Prisma 6", source: "CV notes §2" },
   { key: "endpoints", value: "249 across 28 modules", source: "CV notes §3" },
   { key: "tests", value: "829 passing · 54 suites · 81 s", source: "CV notes §3 (A3.6)" },

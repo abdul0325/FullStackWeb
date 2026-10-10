@@ -100,6 +100,37 @@ Also verified: reduced motion → no intro, no covers, marquee static, `h1` opac
 screen-reader text carries the final values (249 · 829 · 59 · 82 · 11 · 336); hero overflow
 0/16 widths in both themes (remaining 8 failures are the legacy About block, 6 px at ≤600 px).
 
+## After Phase 4 — case-study page, local production build, 11 October 2026
+
+`/projects/commerce-platform-backend` (SSG). First-load JS **≈280 KB gz** (module scripts only —
+the 38.7 KB polyfill chunk is `noModule` and never downloaded by modern browsers; earlier tables
+counted it). HTML 233 KB including the RSC flight payload.
+
+| Metric | Simulated (median of 3) | Devtools throttling |
+|---|---|---|
+| Performance | **85** (82–90 across runs) | 73–86 (TBT noise) |
+| Accessibility | **100** | 100 |
+| Best Practices | 100 | 100 |
+| SEO | 100 | 100 |
+| FCP | 1.4 s | 2.2 s |
+| LCP | 3.9–4.2 s (lantern, see Phase 3 note) | **2.2 s = FCP** |
+| TBT | 120–210 ms | 340–890 ms |
+| CLS | 0.002 | 0.002 |
+
+The 90+ target is not reliably met on this machine: run-to-run variance is ±4 and the score is
+bounded by JavaScript boot (the shell's `motion` ≈86 KB, Next/React ≈106 KB) plus parsing of
+the inline RSC payload for a prose-heavy page. Two fixes landed in this phase (CSS scroll-driven
+`Reveal` with no client boundary; sticky ToC unbroken by `overflow-x-clip`); the remaining lever
+is Phase 9's `LazyMotion` split, which is where the budget work is scheduled.
+
+Also verified, both themes: overflow 0/16 widths on `/` and the case page; console clean; ToC
+active state follows the heading nearest the top third; diagram scrolls inside its own box at 360
+(page `scrollWidth` 360); Shiki output is static HTML (5 blocks, 0 client highlighter JS);
+reduced motion → connectors drawn, reveals static.
+
+Home after Phase 4 (simulated): Performance 78–80, LCP 4.8 s (lantern), CLS 0 — unchanged in
+substance; the legacy About/Projects/Skills/Contact client sections remain the cost.
+
 Two hidden costs surfaced by the byte-weight audit and fixed in Phase 0: `next/link` was
 prefetching the 561 KB résumé PDF as an RSC payload on every page load (now plain `<a>`
 links), and `preview.png` (409 KB) loaded as a CSS background (now a 32 KB WebP).

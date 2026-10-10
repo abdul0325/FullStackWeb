@@ -20,7 +20,9 @@ import { TechMarquee } from "./tech-marquee";
 const HEADLINE = "I ship production systems where correctness is the product.";
 
 const LEDE =
-  "Sole backend engineer on a NestJS + PostgreSQL commerce and ticketing platform — 28 modules, 249 endpoints, 829 passing tests, empty repository to live at api.mrosew.com in 11 weeks.";
+  "Sole backend engineer on a NestJS + PostgreSQL commerce and ticketing platform — 28 modules, 249 endpoints, 829 passing tests, empty repository to live in production in 11 weeks.";
+
+const CASE_STUDY_HREF = "/projects/commerce-platform-backend";
 
 /** Stagger offsets (ms) for the CSS entrance. All transform/opacity. */
 const T = { eyebrow: 0, words: 80, lineGap: 120, lede: 420, ctas: 540, socials: 640, panel: 300, marquee: 760 };
@@ -87,7 +89,7 @@ export default function Hero() {
             >
               <Magnetic className="w-full sm:w-auto">
                 <Button asChild size="lg" className="w-full sm:w-auto">
-                  <a href="#projects">
+                  <a href={CASE_STUDY_HREF}>
                     View the case study <ArrowRight aria-hidden="true" />
                   </a>
                 </Button>

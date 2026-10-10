@@ -17,7 +17,7 @@ export function ProofPanel() {
           <span className="size-2.5 rounded-full bg-success/70" />
         </span>
         <span className="ml-2 truncate font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-fg-subtle">
-          mrosew-backend — production
+          backend — production
         </span>
         <span className="ml-auto flex items-center gap-1.5 font-mono text-[0.6875rem] text-success">
           <span aria-hidden="true" className="size-1.5 rounded-full bg-success" />

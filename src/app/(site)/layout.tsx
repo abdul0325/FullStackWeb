@@ -26,9 +26,11 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Background />
 
       <SiteShell logo={<Logo />}>
-        {/* overflow-x-hidden stays until Phase 6: the hero no longer overflows at
-            any width, but the legacy About section still bleeds 6px at ≤600px. */}
-        <main id="main" tabIndex={-1} className="relative min-h-dvh overflow-x-hidden outline-none">
+        {/* overflow-x-clip stays until Phase 6: the hero no longer overflows at any
+            width, but the legacy About section still bleeds 6px at ≤600px. `clip`,
+            not `hidden` — hidden would make main a scroll container and break
+            position: sticky (the case-study ToC). */}
+        <main id="main" tabIndex={-1} className="relative min-h-dvh overflow-x-clip outline-none">
           {children}
         </main>
       </SiteShell>

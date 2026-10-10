@@ -99,7 +99,7 @@ export function NavMobile({ className }: { className?: string }) {
                   className="flex flex-1 flex-col justify-center gap-1 overflow-y-auto px-5"
                 >
                   {navigation.map((item, i) => {
-                    const isActive = active === item.href.replace("#", "");
+                    const isActive = active === item.href.split("#")[1];
                     return (
                       <motion.div key={item.href} variants={itemVariants}>
                         <Link

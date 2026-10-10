@@ -1,58 +1,32 @@
-"use client";
-
-// Client island: the single entrance-animation wrapper. Every scroll reveal on
-// the site goes through here so the rules hold in one place: transform +
-// opacity only, once per element, reduced-motion → instant, smaller travel
-// below lg (§3.7).
-
-import { useReducedMotion, motion } from "motion/react";
 import type { ReactNode } from "react";
 
-import { distance, duration, ease, viewport } from "@/lib/motion";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils";
+
+// The single entrance-animation wrapper — a SERVER component with zero JS.
+// The reveal is a CSS scroll-driven animation (globals.css `.reveal`,
+// `animation-timeline: view()`): opacity + translateY only, runs once as the
+// element enters the viewport, and elements already on screen at load are
+// past their entry range so they render in their final state. Browsers without
+// scroll-driven animations (and users with reduced motion) get static content.
+// No client boundary, so server-rendered children are never serialised twice.
 
 export interface RevealProps {
   children: ReactNode;
   className?: string;
-  /** Travel in px. Halved automatically below lg. */
-  y?: number;
+  /** Stagger, in seconds — mapped to a later entry range. */
   delay?: number;
-  /** Seconds. */
-  dur?: number;
   id?: string;
 }
 
-export function Reveal({
-  children,
-  className,
-  y = distance.base,
-  delay = 0,
-  dur = duration.base,
-  id,
-}: RevealProps) {
-  const reduce = useReducedMotion();
-  const small = useMediaQuery("(max-width: 1023px)");
-  const travel = small ? Math.round(y / 2) : y;
-
-  if (reduce) {
-    // No hidden state at all: content is visible from the first paint.
-    return (
-      <div id={id} className={className}>
-        {children}
-      </div>
-    );
-  }
-
+export function Reveal({ children, className, delay = 0, id }: RevealProps) {
+  const start = Math.min(160, Math.round(delay * 600)); // 0.1 s → starts 60px later
   return (
-    <motion.div
+    <div
       id={id}
-      className={className}
-      initial={{ opacity: 0, y: travel }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={viewport}
-      transition={{ duration: dur, ease: ease.out, delay }}
+      className={cn("reveal", className)}
+      style={start ? ({ ["--reveal-start" as string]: `${start}px` } as React.CSSProperties) : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
