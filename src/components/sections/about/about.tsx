@@ -6,7 +6,6 @@ import AboutCard from "./about-card";
 import { SectionHeader } from "@/components/ui/section-header";
 import AboutStory from "./about-story";
 import ExpertiseGrid from "./expertise-grid";
-import AboutStats from "./about-stats";
 
 export default function About() {
     return (
@@ -24,7 +23,6 @@ export default function About() {
                     <AboutStory />
                 </div>
                 <ExpertiseGrid />
-                <AboutStats />
             </Container>
         </Section>
     );

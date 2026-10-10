@@ -26,10 +26,8 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
       <Background />
 
       <SiteShell logo={<Logo />}>
-        {/* overflow-x-hidden is a safety net for legacy section decorations that
-            still bleed past the viewport (hero/about orbs, map iframe). Each is
-            fixed properly when its section is rebuilt (Phases 3–7); the probe
-            in the verification script lists any element past the right edge. */}
+        {/* overflow-x-hidden stays until Phase 6: the hero no longer overflows at
+            any width, but the legacy About section still bleeds 6px at ≤600px. */}
         <main id="main" tabIndex={-1} className="relative min-h-dvh overflow-x-hidden outline-none">
           {children}
         </main>

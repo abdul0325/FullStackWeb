@@ -78,6 +78,28 @@ Remaining failing binary audits — `color-contrast` and `svg-img-alt` — are i
 markup (hero availability badge, hero terminal) that Phases 3–7 rebuild. Preview column still
 blocked by Vercel Authentication (see above).
 
+## After Phase 3 — local production build, 11 October 2026
+
+| Metric | Phase 2 | Phase 3 (simulated) | Phase 3 (devtools throttling) |
+|---|---|---|---|
+| Performance | 80 | 81 | 82 |
+| Accessibility | 96 | 96 | — |
+| FCP | 1.5 s | 1.4 s | 2.1 s |
+| LCP | 4.2 s | 4.7 s * | **2.1 s (= FCP)** |
+| TBT | 230 ms | 140 ms | 470 ms |
+| CLS | 0.002 | **0.003** (glow fixed from 0.067) | 0 |
+| Speed Index | 3.7 s | 2.6 s | 4.6 s |
+
+LCP element is now `h1#hero-heading` (PerformanceObserver: 220–240 ms, 75,400 px², CLS 0 in
+both themes). \* Simulated LCP is inflated on localhost: every JS chunk arrives before the observed
+LCP (399 ms), so Lighthouse's lantern model counts all JS as an LCP dependency. Real throttling
+shows the headline painting at first paint. The remaining score gap is TBT / Speed Index from the
+legacy client sections (About, Projects, Skills, Contact) — Phases 6–7 and 9.
+
+Also verified: reduced motion → no intro, no covers, marquee static, `h1` opacity 1; proof strip
+screen-reader text carries the final values (249 · 829 · 59 · 82 · 11 · 336); hero overflow
+0/16 widths in both themes (remaining 8 failures are the legacy About block, 6 px at ≤600 px).
+
 Two hidden costs surfaced by the byte-weight audit and fixed in Phase 0: `next/link` was
 prefetching the 561 KB résumé PDF as an RSC payload on every page load (now plain `<a>`
 links), and `preview.png` (409 KB) loaded as a CSS background (now a 32 KB WebP).

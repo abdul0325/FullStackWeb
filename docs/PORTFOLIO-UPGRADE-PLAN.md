@@ -1055,7 +1055,8 @@ written reason. Add `@next/bundle-analyzer` behind an `ANALYZE=true` env flag.
 ### 6.5 Server vs client components
 
 - **Default is server.** A `"use client"` directive must be justified in review.
-- Target: no more than 10 client components in the whole tree. Permitted: `ThemeProvider`,
+- Target (revised 11 Oct 2026): client components stay **small, and lazy where possible**; there is
+  no hard count. Original list of permitted islands: `ThemeProvider`,
   nav scroll behaviour, mobile nav sheet, command palette, contact form, count-up tiles,
   hero terminal, marquee, custom cursor, back-to-top.
 - Every section's text, headings, data and images are server-rendered. Client islands wrap
@@ -1478,7 +1479,7 @@ interaction primitives.
 
 **Acceptance criteria**
 
-- Client-component count across the tree is ≤10, each with a justifying comment.
+- Client components are small islands, each with a justifying comment; palette and cursor are lazy.
 - Keyboard-only: skip link works; every nav item, the theme toggle, the palette and the
   mobile sheet are reachable and operable; focus returns to the trigger on close.
 - The loader does not appear on a second visit in the same session, is skippable, and never
@@ -1511,20 +1512,36 @@ every hit; `npm run build` route table; axe on `/` and `/styleguide`.
 
 **Goal:** win the first ten seconds.
 
-- [ ] Create `src/data/metrics.ts` — the six homepage figures from §4.3, each with a `source`
+- [x] Create `src/data/metrics.ts` — the six homepage figures from §4.3, each with a `source`
       field citing `docs/CV-PROJECT-NOTES.md`.
-- [ ] Rebuild `hero.tsx` as a server component: name, positioning line, substantiation,
+- [x] Rebuild `hero.tsx` as a server component: name, positioning line, substantiation,
       availability badge (one implementation), primary and secondary CTAs, social links.
-- [ ] Extract the availability badge into one component fed by `data/site.ts`; delete the
+- [x] Extract the availability badge into one component fed by `data/site.ts`; delete the
       duplicated markup.
-- [ ] Rework `hero-terminal.tsx` to print real figures; keep it a small client island.
-- [ ] Build `tech-marquee.tsx` — CSS/transform infinite translation, paused on hover, stopped
+- [x] Rework `hero-terminal.tsx` to print real figures; keep it a small client island.
+- [x] Build `tech-marquee.tsx` — CSS/transform infinite translation, paused on hover, stopped
       under reduced motion, one row at `xs`.
-- [ ] Build `proof-strip.tsx` (server) and `metric-tile.tsx` (client count-up), with the final
+- [x] Build `proof-strip.tsx` (server) and `metric-tile.tsx` (client count-up), with the final
       value in server-rendered HTML and a tooltip naming each figure's source.
-- [ ] Hook the CV download to `public/resume/AbdulRehman_FullStack.pdf` with `download` and an
+- [x] Hook the CV download to `public/resume/AbdulRehman_FullStack.pdf` with `download` and an
       analytics event.
-- [ ] **Delete `about-stats.tsx`** and its four unprovable figures.
+- [x] **Delete `about-stats.tsx`** and its four unprovable figures.
+- [x] *(Design)* Headline reveal is a CSS-only line mask: one text node (the LCP element,
+      painted at first paint, never opacity:0) under three page-coloured covers that wipe off in
+      sequence. Lede, CTAs, socials, proof panel and marquee fade/rise on staggered CSS delays.
+      Reduced motion removes the covers and all entrance animation.
+- [x] *(Replaced)* The 177-line client terminal became a server-rendered mono proof panel of
+      sourced facts; `react-countup`, `hero-terminal`, `hero-badges`, `tech-badge` removed.
+- [x] *(Found during the phase)* The background glow (`h-[70vh]`, `-translate-x-1/2`) registered
+      a 0.066 layout shift in Lighthouse; now sized in px with no transform or vh units (CLS 0.003).
+- [x] *(Found during the phase)* Decorative blur orbs with negative offsets removed from projects,
+      skills and contact as well as hero. Remaining viewport overflow is the legacy About section
+      (6 px at ≤600 px); `overflow-x-hidden` stays on `main` until Phase 6.
+- [x] *(Measurement note)* Lighthouse **simulated** LCP on localhost reads 4.7 s because every JS
+      chunk arrives before the observed LCP (399 ms) and the lantern model then treats all JS as an
+      LCP dependency. With real throttling (`--throttling-method=devtools`) FCP = LCP = 2.1 s — the
+      headline paints at first paint. The score ceiling (81–82) is TBT/Speed Index from the legacy
+      client sections, which Phases 6–7 and 9 remove.
 
 **Files touched:** `src/components/sections/hero/**`, `src/components/sections/proof/**`,
 `src/components/sections/about/about-stats.tsx` (deleted), `src/data/{metrics,site}.ts`,

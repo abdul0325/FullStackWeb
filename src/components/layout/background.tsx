@@ -1,5 +1,7 @@
-// Static decorative background: a tiling SVG noise texture plus one radial accent
-// glow. Replaces the WebGL starfield — no canvas, no animation loop, zero JS.
+// Static decorative background: a tiling SVG noise texture plus one radial
+// accent glow. Replaces the WebGL starfield — no canvas, no animation loop,
+// zero JS. The glow is sized in px and positioned without transforms or
+// viewport-height units so it can never register as a layout shift.
 
 const NOISE_SVG =
   "data:image/svg+xml;utf8," +
@@ -12,10 +14,20 @@ const NOISE_SVG =
 
 export function Background() {
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      style={{ contain: "strict" }}
+    >
       {/* Single accent glow, static, behind the hero */}
       <div
-        className="absolute left-1/2 top-[-20%] h-[70vh] w-[90vw] max-w-[1100px] -translate-x-1/2 rounded-full bg-violet-500/10 blur-3xl"
+        className="absolute rounded-full bg-brand/10 blur-3xl"
+        style={{
+          width: "min(90vw, 1100px)",
+          height: "560px",
+          top: "-160px",
+          left: "max(5vw, calc(50% - 550px))",
+        }}
       />
       {/* Noise layer */}
       <div

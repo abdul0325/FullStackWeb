@@ -147,7 +147,7 @@
   --font-heading: var(--font-geist-sans);
 
   /* Fluid type scale — headings are clamp() only, never fixed px */
-  --text-display: clamp(2.75rem, 1.5rem + 5.5vw, 5.5rem);
+  --text-display: clamp(2.25rem, 1.5rem + 5.5vw, 5.5rem);
   --text-display--line-height: 0.95;
   --text-display--letter-spacing: -0.03em;
   --text-display--font-weight: 800;
@@ -404,4 +404,53 @@ html[data-custom-cursor="on"] [role="button"] {
 }
 html[data-custom-cursor="on"] :is(input, textarea, select, [contenteditable]) {
   cursor: auto;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Hero entrance — CSS only, so it runs from the first paint with no   */
+/*  hydration wait. Text is never opacity:0; covers wipe off instead,   */
+/*  so the LCP element paints immediately.                              */
+/* ------------------------------------------------------------------ */
+
+@keyframes wipe-cover {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@utility animate-wipe-cover {
+  animation: wipe-cover var(--duration-slow) var(--ease-out-expo) both;
+  transform-origin: right;
+}
+@utility animate-fade-up {
+  animation: fade-up var(--duration-base) var(--ease-out-expo) both;
+}
+@utility animate-fade-in {
+  animation: fade-in var(--duration-base) var(--ease-out-expo) both;
+}
+@utility animate-marquee {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+/* Marquee pauses for pointer and keyboard users */
+.marquee:hover .animate-marquee,
+.marquee:focus-within .animate-marquee {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wipe-cover { display: none; }
+  .animate-fade-up, .animate-fade-in { animation: none; opacity: 1; transform: none; }
+  .animate-marquee { animation: none; }
 }

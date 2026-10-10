@@ -14,35 +14,9 @@ export default function Skills() {
     >
       {/* Purple Glow */}
 
-      <div
-        className="
-          pointer-events-none
-          absolute
-          -left-40
-          top-24
-          h-[520px]
-          w-[520px]
-          rounded-full
-          bg-violet-500/15
-          blur-[180px]
-        "
-      />
 
       {/* Blue Glow */}
 
-      <div
-        className="
-          pointer-events-none
-          absolute
-          -right-40
-          bottom-16
-          h-[520px]
-          w-[520px]
-          rounded-full
-          bg-cyan-500/10
-          blur-[180px]
-        "
-      />
 
       {/* Glass Reflection */}
 

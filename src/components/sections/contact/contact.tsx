@@ -15,9 +15,6 @@ export default function Contact() {
         >
             {/* Soft White Glows */}
             <div className="pointer-events-none absolute inset-0">
-                <div className="absolute left-[-15%] top-[-20%] h-[800px] w-[800px] rounded-full bg-violet-500/10 blur-[160px] animate-pulse" />
-                <div className="absolute right-[-10%] bottom-[-30%] h-[700px] w-[700px] rounded-full bg-cyan-500/10 blur-[160px] animate-pulse delay-700" />
-                <div className="absolute left-1/3 top-1/2 h-[400px] w-[400px] rounded-full bg-fuchsia-500/5 blur-[120px] animate-pulse delay-1000" />
             </div>
 
             <Container className="relative z-10 space-y-20">

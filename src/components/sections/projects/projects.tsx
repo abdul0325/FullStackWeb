@@ -15,35 +15,9 @@ export default function Projects() {
 >
   {/* Purple Glow */}
 
-  <div
-    className="
-      pointer-events-none
-      absolute
-      -left-32
-      top-32
-      h-[420px]
-      w-[420px]
-      rounded-full
-      bg-violet-500/15
-      blur-[160px]
-    "
-  />
 
   {/* Blue Glow */}
 
-  <div
-    className="
-      pointer-events-none
-      absolute
-      -right-32
-      bottom-16
-      h-[420px]
-      w-[420px]
-      rounded-full
-      bg-cyan-500/10
-      blur-[160px]
-    "
-  />
 
   {/* Glass Blur */}
 
