@@ -39,12 +39,31 @@ Target: https://abdulfullstackdev.vercel.app/ (commit `10acde1`), 1 run.
 Lighthouse after Phase 0 (local `next start`, 1 run) — see the Phase 0 report; the
 authoritative after-figure is the Vercel preview run, recorded below once available.
 
-**Preview column blocked (11 October 2026):** the `flash` preview
-(`full-stack-4pu90asyq-abdul-rehmans-projects-315a6ea5.vercel.app`) is behind Vercel
-Authentication — every route 302s to SSO and `/api/contact` returns 401 "Protected
-deployment". Lighthouse and the contact-form test need either Deployment Protection turned
-off for Preview, or a Protection Bypass for Automation secret (sent as the
-`x-vercel-protection-bypass` header). Local prod-build figures stand in until then.
+## Vercel preview — `flash` at `00fd4c0` (after Phase 4), 11 October 2026
+
+Deployment `full-stack-6qvpj76ly-abdul-rehmans-projects-315a6ea5.vercel.app`, public (Vercel
+Authentication off). Lighthouse mobile, simulated throttling, run from this machine.
+
+| Route | Perf | A11y | BP | SEO | FCP | LCP | TBT | CLS | SI |
+|---|---|---|---|---|---|---|---|---|---|
+| `/` run 1 (cold deployment) | 61 | 96 | 100 | 63 | 1.5 s | 2.3 s | 3,130 ms | 0.002 | 7.9 s |
+| `/` runs 2–3 (warm) | **80–84** | 96 | 100 | 63 | — | 3.5 s | 270–370 ms | 0.002 | 3.1 s |
+| `/styleguide` | 86 | 91 → fixed | 100 | 60 | 1.0 s | 2.5 s | 430 ms | 0 | 3.2 s |
+| `/projects/commerce-platform-backend` | 80 | **100** | 100 | 66 | 1.4 s | 3.7 s | 340 ms | 0.002 | 3.7 s |
+
+Notes: the first run hit a cold deployment (React chunk boot 9.3 s, GC 2.2 s) and is not
+representative. **SEO 60–66 is `is-crawlable`: Vercel sends `X-Robots-Tag: noindex` on every
+preview deployment** — production will not carry it, so expect 100 there (the Phase 0 local
+run already scores 100). Security headers confirmed on the edge; unknown paths return 404.
+`/styleguide` A11y 91 was a `button-name` failure on the loading-state demo buttons (label
+hidden with `visibility:hidden`) and one `fg-faint` readable label — both fixed in the commit
+after this one. Contact-form test on the preview returned
+`500 {"ok":false,"error":"Mail service not configured"}` — the four `EMAILJS_*` variables are
+not present in the **Preview** environment of the Vercel project (they are per-environment);
+to be re-tested once enabled for Preview and redeployed.
+
+Earlier note (superseded): the Phase 1 preview was behind Vercel Authentication (302 → SSO,
+`/api/contact` 401), which blocked the first attempt.
 
 | Metric | Before (live) | Local prod after Phase 0 | Vercel preview |
 |---|---|---|---|

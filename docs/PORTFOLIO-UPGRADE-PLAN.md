@@ -2123,6 +2123,10 @@ Nothing below can be invented. Anything still unchecked when its phase arrives g
       current (exposed) keys are set in Vercel env vars for now so the preview form works.
 - [x] **Confirm the production domain** — `abdulfullstackdev.vercel.app` (11 Oct 2026).
       Held in `src/lib/site.ts` → `SITE_URL`.
+- [ ] **Vercel env vars for Preview.** `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID`, `EMAILJS_PUBLIC_KEY`,
+      `EMAILJS_PRIVATE_KEY` must be enabled for the **Preview** environment as well as Production
+      (Vercel scopes variables per environment). The 11 Oct preview test returned
+      `500 Mail service not configured`. Redeploy after enabling; I will re-test.
 - [ ] **Vercel Analytics** — enabled on the project?
 - [ ] **Google Search Console** — do you want it verified, and do you have the token?
 
