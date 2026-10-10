@@ -18,7 +18,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       attribute="data-theme"
       defaultTheme={DEFAULT_THEME}
       enableSystem={false}
-      disableTransitionOnChange
+      // Transitions are not disabled: the toggle sets html[data-theme-transition]
+      // for one duration.base so colours cross-fade (globals.css), unless the
+      // user prefers reduced motion.
     >
       {children}
     </NextThemesProvider>

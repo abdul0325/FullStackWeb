@@ -13,9 +13,13 @@ import {
   CardTitle,
   LinkCard,
 } from "@/components/ui/card";
+import { CopyButton } from "@/components/ui/copy-button";
 import { Field, Input } from "@/components/ui/input";
+import { Magnetic } from "@/components/ui/magnetic";
+import { Tag } from "@/components/ui/tag";
 import { TextLink } from "@/components/ui/text-link";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { duration, ease, stagger, distance } from "@/lib/motion";
 
@@ -114,10 +118,43 @@ function ThemePanel({ theme }: { theme: "dark" | "light" }) {
         <Badges />
         <Cards />
         <Fields />
+        <Controls />
         <Motion />
         <Radii />
       </div>
     </section>
+  );
+}
+
+function Controls() {
+  return (
+    <Section title="Tags, tooltip, copy, magnetic" hint="Filter chips (aria-pressed) · tooltip on hover/focus · copy button with live region · magnetic CTA (desktop only)">
+      <div className="flex flex-wrap items-center gap-2">
+        <Tag selected count={12}>
+          All
+        </Tag>
+        <Tag count={6}>Next.js</Tag>
+        <Tag count={3}>NestJS</Tag>
+        <Tag disabled count={0}>
+          Rust
+        </Tag>
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="secondary" size="sm">
+              Hover or focus me
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>249 HTTP endpoints — CV notes §3, release/events</TooltipContent>
+        </Tooltip>
+        <CopyButton value="abdulrehman.fullstackdev@gmail.com" label="Copy email" />
+        <CopyButton value="abdulrehman.fullstackdev@gmail.com" />
+        <Magnetic>
+          <Button>Magnetic CTA</Button>
+        </Magnetic>
+      </div>
+    </Section>
   );
 }
 

@@ -3,7 +3,7 @@
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { motion } from "motion/react";
-import SectionHeader from "./section-header";
+import { SectionHeader } from "@/components/ui/section-header";
 import ContactForm from "./contact-form";
 import MapCard from "./map-card";
 
@@ -21,7 +21,12 @@ export default function Contact() {
             </div>
 
             <Container className="relative z-10 space-y-20">
-                <SectionHeader />
+                <SectionHeader
+          eyebrow="Contact"
+          title="Ready to build something legendary?"
+          lede="From pixel-perfect frontends to robust backend architecture — let’s turn your vision into a high-impact product."
+          align="center"
+        />
 
                 <motion.div
                     initial={{ opacity: 0, y: 60 }}

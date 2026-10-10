@@ -3,7 +3,7 @@
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 
-import SectionHeader from "./section-header";
+import { SectionHeader } from "@/components/ui/section-header";
 import SkillsGrid from "./skills-grid";
 
 export default function Skills() {
@@ -70,7 +70,12 @@ export default function Skills() {
 
       <Container className="relative z-10 space-y-20">
 
-        <SectionHeader />
+        <SectionHeader
+          eyebrow="Skills & Technologies"
+          title="Building reliable software with modern technologies."
+          lede="A curated toolkit of frontend, backend, cloud, AI, and development technologies used to build production-ready applications that are scalable, maintainable, and performant."
+          align="center"
+        />
 
         <SkillsGrid />
 

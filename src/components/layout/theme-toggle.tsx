@@ -30,13 +30,24 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     ? `Switch to ${isDark ? "light" : "dark"} theme`
     : "Toggle theme";
 
+  function toggle() {
+    const root = document.documentElement;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce) {
+      // Cross-fade colours for one duration.base (globals.css), then clean up.
+      root.setAttribute("data-theme-transition", "");
+      window.setTimeout(() => root.removeAttribute("data-theme-transition"), 400);
+    }
+    setTheme(isDark ? "light" : "dark");
+  }
+
   return (
     <button
       type="button"
       aria-label={label}
       title={label}
       aria-pressed={mounted ? isDark : undefined}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={toggle}
       className={cn(
         "relative inline-flex size-10 shrink-0 items-center justify-center rounded-md",
         "border border-line bg-bg-subtle text-fg-muted",

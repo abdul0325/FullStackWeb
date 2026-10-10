@@ -39,6 +39,13 @@ Target: https://abdulfullstackdev.vercel.app/ (commit `10acde1`), 1 run.
 Lighthouse after Phase 0 (local `next start`, 1 run) — see the Phase 0 report; the
 authoritative after-figure is the Vercel preview run, recorded below once available.
 
+**Preview column blocked (11 October 2026):** the `flash` preview
+(`full-stack-4pu90asyq-abdul-rehmans-projects-315a6ea5.vercel.app`) is behind Vercel
+Authentication — every route 302s to SSO and `/api/contact` returns 401 "Protected
+deployment". Lighthouse and the contact-form test need either Deployment Protection turned
+off for Preview, or a Protection Bypass for Automation secret (sent as the
+`x-vercel-protection-bypass` header). Local prod-build figures stand in until then.
+
 | Metric | Before (live) | Local prod after Phase 0 | Vercel preview |
 |---|---|---|---|
 | Performance | 52 | **67** | _pending_ |
@@ -51,6 +58,25 @@ authoritative after-figure is the Vercel preview run, recorded below once availa
 | CLS | 0.022 | 0.018 | _pending_ |
 | Speed Index | 4.9 s | 4.2 s | _pending_ |
 | Total byte weight | 1,247 KiB | **381 KiB** | _pending_ |
+
+## After Phase 2 — local production build, 11 October 2026
+
+| Metric | Before (live) | Phase 0 | Phase 2 |
+|---|---|---|---|
+| Performance | 52 | 67 | **80** |
+| Accessibility | 92 | 92 | **96** |
+| Best Practices | 100 | 100 | 100 |
+| SEO | 92 | 100 | 100 |
+| FCP | 1.0 s | 0.9 s | 1.5 s |
+| LCP | 6.1 s | 3.9 s | **4.2 s** |
+| TBT | 1,080 ms | 770 ms | **230 ms** |
+| CLS | 0.022 | 0.018 | **0.002** |
+| Speed Index | 4.9 s | 4.2 s | 3.7 s |
+| Total byte weight | 1,247 KiB | 381 KiB | 507 KiB |
+
+Remaining failing binary audits — `color-contrast` and `svg-img-alt` — are in legacy section
+markup (hero availability badge, hero terminal) that Phases 3–7 rebuild. Preview column still
+blocked by Vercel Authentication (see above).
 
 Two hidden costs surfaced by the byte-weight audit and fixed in Phase 0: `next/link` was
 prefetching the 561 KB résumé PDF as an RSC payload on every page load (now plain `<a>`
@@ -66,3 +92,4 @@ bootup 1.7 s — which is the Phase 2 (server-first shell) and Phase 9 work.
 | Before | 541.3 KB | — |
 | 0 | 304.6 KB | WebGL and duplicate animation runtime removed |
 | 1 | 306.9 KB (+2.3) | `next-themes` provider + toggle; CSS 18.5 KB gz. `/styleguide` 273.9 KB |
+| 2 | 354.9 KB (+48.0) | **Over the 10 KB rule — reason:** the shell's interaction features are genuinely new code: Radix Dialog for the mobile menu (7.7 KB), motion scroll/spring/presence modules for header hide, scroll rail and back-to-top (≈26 KB across two chunks), `next/dynamic` + Suspense runtime for the lazy palette/cursor, intro and template islands (≈15 KB). The command palette (cmdk) and custom cursor are **not** in the initial bundle — verified: one chunk loads on first Ctrl+K, cursor chunk only on desktop fine-pointer. The ≤130 KB target is Phase 9 work: `LazyMotion`/`m` to drop the full motion feature set, and the legacy client sections (hero terminal, skills, about cards) being rebuilt as server components in Phases 3–7. `/styleguide` 264.6 KB |

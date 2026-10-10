@@ -34,14 +34,14 @@ route is `POST /api/contact` (`src/app/api/contact/route.ts`).
 a `<Section id="x">`, an `{ title, href: "#x" }` entry in `src/data/navigation.ts`, and a mount in
 `page.tsx`. Current ids: `home`, `about`, `projects`, `skills`, `contact`.
 
-**`ClientLayout` owns the whole shell** (until Phase 2 of the upgrade plan dismantles it).
-`src/app/layout.tsx` is a thin server component (metadata, Geist font) and delegates to
-`src/components/layout/ClientLayout.tsx`, a client component that: gates first paint behind an
-800 ms `Loader`, mounts the static `Background` (SVG noise + one CSS glow — no WebGL anywhere),
-wraps `children` in an `AnimatePresence` transition keyed on `pathname`, and mounts `Navbar` and
-`Footer`.
+**Shell = `src/app/(site)/layout.tsx`.** Root `layout.tsx` is html/body + fonts + `ThemeProvider` +
+Vercel analytics only. The `(site)` route group adds the skip link, static `Background`, `SiteShell`
+(client: header with hide-on-scroll, lazy command palette on ⌘K, lazy desktop-only custom cursor,
+first-visit intro, scroll rail), `<main id="main">` and the server `SiteFooter`. `/styleguide` sits
+outside the group on purpose. Theme toggle lives in `site-header.tsx` and inside the mobile menu
+(`nav/nav-mobile.tsx`, a Radix Dialog full-screen sheet).
 
-**Component layout.** `src/components/layout/` = shell chrome. `src/components/sections/<name>/` =
+**Component layout.** `src/components/layout/` = shell chrome (`site-shell`, `site-header`, `nav/*`, `site-footer`, `theme-*`, `intro-loader`, `command-palette`, `custom-cursor`, `scroll-progress`, `back-to-top`, `background`). `src/components/sections/<name>/` =
 one folder per page section, with the section entry file plus its private subcomponents.
 `src/components/ui/` = shared primitives (`Section`, `Container`, `PopButton`, shadcn `button`/`sheet`).
 
@@ -52,7 +52,12 @@ one folder per page section, with the section entry file plus its private subcom
 ## Conventions
 
 - `Container` (`max-w-7xl` + responsive gutters) inside `Section` (vertical rhythm) is the standard
-  page-width wrapper. Don't hand-roll max-widths.
+  page-width wrapper. Don't hand-roll max-widths. `ui/section-header.tsx` is the one section header
+  (eyebrow / title / lede props); `ui/reveal.tsx` is the one scroll-reveal wrapper.
+- Design tokens: `bg/bg-subtle/bg-elevated/bg-overlay/bg-inset`, `fg/fg-muted/fg-subtle/fg-faint`,
+  `line/line-strong`, `brand*`, `success/warning/danger` — all in `globals.css`, both themes, contrast
+  matrix in `docs/CONTRAST.md`. Never use raw `zinc-*`/`white`/`black` classes in new code.
+- Hover-only styles go behind the `hoverable:` variant; motion values come from `src/lib/motion.ts`.
 - Tailwind v4 is CSS-first: there is **no `tailwind.config`**. Theme tokens, the `@theme inline`
   mapping, the radius scale, and the `dark` variant all live in `src/app/globals.css`.
 - shadcn is configured for the `radix-nova` style with `@/lib/utils` as the `cn` alias
@@ -78,8 +83,6 @@ one folder per page section, with the section entry file plus its private subcom
 Worth knowing before editing; fix opportunistically rather than assuming they're intentional.
 
 - `src/data/navigation.ts` is the single nav source (the stale `lib/constants.ts` duplicate is gone).
-- **Four diverged `section-header.tsx` copies**, one per section folder — they are not
-  interchangeable; edit the one in the section you're touching.
 - The contact form posts JSON to `/api/contact`, which validates with Zod, drops honeypot and
   sub-2-second submissions with a fake `ok`, rate-limits per IP in memory, and calls the EmailJS
   REST API with server-only keys. Old keys that were once in source were rotated.

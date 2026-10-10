@@ -19,37 +19,47 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: oklch(0.145 0.012 265);
-  --bg-subtle: oklch(0.185 0.014 265);
-  --bg-elevated: oklch(0.225 0.016 265);
-  --bg-inset: oklch(0.12 0.01 265);
+  /* Dark is engineered on its own terms (§3.2.1): four deliberate surface
+     steps, no pure black, body text held below pure white to avoid halation,
+     accent desaturated a touch so it reads vivid rather than neon. */
+  --bg: oklch(0.15 0.012 265);           /* base            #090b10 */
+  --bg-subtle: oklch(0.19 0.014 265);    /* raised          #11141a */
+  --bg-elevated: oklch(0.23 0.016 265);  /* cards           #191d25 */
+  --bg-overlay: oklch(0.27 0.018 265);   /* menus, popovers #22262f */
+  --bg-inset: oklch(0.125 0.01 265);     /* wells, code     #05060a */
 
-  --fg: oklch(0.975 0.004 265);
-  --fg-muted: oklch(0.78 0.012 265);
+  --fg: oklch(0.94 0.006 265);           /* #e9ebef — not #fff */
+  --fg-muted: oklch(0.77 0.012 265);
   --fg-subtle: oklch(0.66 0.014 265);
-  --fg-faint: oklch(0.53 0.014 265);
+  --fg-faint: oklch(0.56 0.014 265);
 
-  --border: oklch(0.28 0.016 265);
-  --border-strong: oklch(0.49 0.02 265);
-  --border-accent: oklch(0.76 0.14 250 / 0.4);
+  --border: oklch(0.29 0.016 265);
+  --border-strong: oklch(0.5 0.02 265);
+  --border-accent: oklch(0.74 0.135 250 / 0.4);
 
-  --accent: oklch(0.76 0.14 250);
-  --accent-hover: oklch(0.8 0.14 250);
-  --accent-pressed: oklch(0.7 0.14 250);
-  --accent-fg: oklch(0.145 0.012 265);
-  --accent-subtle: oklch(0.76 0.14 250 / 0.12);
-  --accent-ring: oklch(0.76 0.14 250 / 0.55);
+  --accent: oklch(0.74 0.135 250);       /* #63b0fc */
+  --accent-hover: oklch(0.78 0.135 250);
+  --accent-pressed: oklch(0.68 0.135 250);
+  --accent-fg: oklch(0.15 0.012 265);
+  --accent-subtle: oklch(0.74 0.135 250 / 0.14);
+  --accent-ring: oklch(0.74 0.135 250 / 0.6);
 
-  --success: oklch(0.76 0.15 155);
-  --warning: oklch(0.82 0.15 80);
-  --danger: oklch(0.72 0.19 25);
+  --success: oklch(0.75 0.14 155);
+  --warning: oklch(0.8 0.14 80);
+  --danger: oklch(0.71 0.18 25);
 
-  --shadow-popover: 0 16px 40px -12px oklch(0 0 0 / 0.55);
-  --shadow-lift: 0 8px 24px -8px oklch(0 0 0 / 0.4);
+  /* Dark shadows are deeper and tighter; a faint accent glow replaces the
+     ambient spread a light theme gets for free. */
+  --shadow-popover: 0 20px 48px -16px oklch(0 0 0 / 0.7), 0 0 0 1px oklch(0.3 0.016 265);
+  --shadow-lift: 0 10px 28px -10px oklch(0 0 0 / 0.6);
+  --glow-accent: 0 0 0 1px var(--border-accent), 0 0 32px -8px oklch(0.74 0.135 250 / 0.35);
 
-  --selection: oklch(0.76 0.14 250 / 0.3);
+  --selection: oklch(0.74 0.135 250 / 0.32);
   --scrollbar: oklch(0.34 0.016 265);
   --scrollbar-hover: oklch(0.44 0.018 265);
+
+  --code-bg: var(--bg-inset);
+  --code-fg: oklch(0.86 0.01 265);
 
   --radius: 0.75rem;
 
@@ -58,7 +68,7 @@
   --foreground: var(--fg);
   --card: var(--bg-elevated);
   --card-foreground: var(--fg);
-  --popover: var(--bg-elevated);
+  --popover: var(--bg-overlay);
   --popover-foreground: var(--fg);
   --primary: var(--accent);
   --primary-foreground: var(--accent-fg);
@@ -90,6 +100,7 @@
   --bg: oklch(0.995 0.002 265);
   --bg-subtle: oklch(0.975 0.004 265);
   --bg-elevated: oklch(1 0 0);
+  --bg-overlay: oklch(1 0 0);
   --bg-inset: oklch(0.96 0.005 265);
 
   --fg: oklch(0.18 0.014 265);
@@ -115,9 +126,14 @@
   --shadow-popover: 0 16px 40px -12px oklch(0.2 0.02 265 / 0.25);
   --shadow-lift: 0 8px 24px -8px oklch(0.2 0.02 265 / 0.18);
 
+  --glow-accent: 0 0 0 1px var(--border-accent), 0 0 24px -8px oklch(0.5 0.18 250 / 0.25);
+
   --selection: oklch(0.5 0.18 250 / 0.22);
   --scrollbar: oklch(0.82 0.008 265);
   --scrollbar-hover: oklch(0.72 0.01 265);
+
+  --code-bg: var(--bg-inset);
+  --code-fg: oklch(0.3 0.014 265);
 }
 
 /* ------------------------------------------------------------------ */
@@ -160,7 +176,10 @@
   --color-bg: var(--bg);
   --color-bg-subtle: var(--bg-subtle);
   --color-bg-elevated: var(--bg-elevated);
+  --color-bg-overlay: var(--bg-overlay);
   --color-bg-inset: var(--bg-inset);
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-subtle: var(--fg-subtle);
@@ -223,6 +242,7 @@
   /* Shadows — the only two that exist */
   --shadow-popover: var(--shadow-popover);
   --shadow-lift: var(--shadow-lift);
+  --shadow-glow-accent: var(--glow-accent);
 
   /* Motion — mirrors src/lib/motion.ts for CSS transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -355,4 +375,33 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ------------------------------------------------------------------ */
+/*  Theme switch — smooth colour transition, collapsed under reduced   */
+/*  motion. next-themes adds disableTransitionOnChange's inline style  */
+/*  only during the swap; this governs everything else.                */
+/* ------------------------------------------------------------------ */
+
+html[data-theme-transition] *,
+html[data-theme-transition] *::before,
+html[data-theme-transition] *::after {
+  transition:
+    background-color var(--duration-base) var(--ease-in-out-quart),
+    border-color var(--duration-base) var(--ease-in-out-quart),
+    color var(--duration-base) var(--ease-in-out-quart),
+    fill var(--duration-base) var(--ease-in-out-quart),
+    stroke var(--duration-base) var(--ease-in-out-quart) !important;
+}
+
+/* Custom cursor active: hide the native pointer except where precise text
+   placement matters. Links and buttons get the ring instead. */
+html[data-custom-cursor="on"],
+html[data-custom-cursor="on"] a,
+html[data-custom-cursor="on"] button,
+html[data-custom-cursor="on"] [role="button"] {
+  cursor: none;
+}
+html[data-custom-cursor="on"] :is(input, textarea, select, [contenteditable]) {
+  cursor: auto;
 }

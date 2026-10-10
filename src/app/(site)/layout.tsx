@@ -1,8 +1,41 @@
 import type { ReactNode } from "react";
-import ClientLayout from "@/components/layout/ClientLayout";
 
-// The site shell (navbar, loader, background, footer) applies only to routes in
-// this group. Standalone routes such as /styleguide live outside it.
+import { Background } from "@/components/layout/background";
+import { INTRO_FLAG_SCRIPT } from "@/components/layout/intro-loader";
+import { Logo } from "@/components/layout/nav/logo";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteShell } from "@/components/layout/site-shell";
+
+// Server component. The site shell for every route in this group: skip link,
+// static background, header (client island), server-rendered content, server
+// footer. Standalone routes such as /styleguide live outside the group.
+
 export default function SiteLayout({ children }: { children: ReactNode }) {
-  return <ClientLayout>{children}</ClientLayout>;
+  return (
+    <>
+      {/* Decides before first paint whether the first-visit intro shows. */}
+      <script dangerouslySetInnerHTML={{ __html: INTRO_FLAG_SCRIPT }} />
+
+      <a
+        href="#main"
+        className="sr-only-focusable fixed left-4 top-4 z-[90] rounded-md border border-line-strong bg-bg-overlay px-4 py-2 text-sm font-medium text-fg shadow-popover"
+      >
+        Skip to content
+      </a>
+
+      <Background />
+
+      <SiteShell logo={<Logo />}>
+        {/* overflow-x-hidden is a safety net for legacy section decorations that
+            still bleed past the viewport (hero/about orbs, map iframe). Each is
+            fixed properly when its section is rebuilt (Phases 3–7); the probe
+            in the verification script lists any element past the right edge. */}
+        <main id="main" tabIndex={-1} className="relative min-h-dvh overflow-x-hidden outline-none">
+          {children}
+        </main>
+      </SiteShell>
+
+      <SiteFooter />
+    </>
+  );
 }

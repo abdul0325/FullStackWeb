@@ -3,7 +3,7 @@
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 
-import SectionHeader from "./section-header";
+import { SectionHeader } from "@/components/ui/section-header";
 import ProjectGrid from "./project-grid";
 
 export default function Projects() {
@@ -57,7 +57,12 @@ export default function Projects() {
   />
 
   <Container className="relative z-10 space-y-24">
-    <SectionHeader />
+    <SectionHeader
+          eyebrow="Featured Projects"
+          title="Building products, not just applications."
+          lede="A selection of production-ready full stack applications, AI-powered systems, scalable backend architectures, and modern web platforms built with performance, maintainability, and exceptional user experience in mind."
+          align="center"
+        />
     <ProjectGrid />
   </Container>
 </Section>

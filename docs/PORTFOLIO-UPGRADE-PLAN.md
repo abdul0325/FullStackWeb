@@ -360,6 +360,41 @@ elevated cards (`linear-gradient` on a `::before`, `--border-strong` to transpar
 only, at ≤12% opacity, in a `pointer-events-none` layer. No glow on hover, no glow on
 cards, no stacked blur orbs — the current site has five of them and they read as noise.
 
+### 3.2.1 Dark theme — a first-class theme, not an inversion
+
+Dark is designed separately from light. The light palette is not inverted; each dark
+token is chosen for a dark surface. Binding on every component from Phase 2 on.
+
+- **Layered surfaces, deliberate steps.** `bg` (base) → `bg-subtle` (raised) → `bg-elevated`
+  (cards) → `bg-overlay` (menus, popovers, command palette) → `bg-inset` (wells, code).
+  Each step is a visible lightness increment (0.15 → 0.19 → 0.23 → 0.27, inset 0.125).
+  **No pure `#000` surface** — the base is `#090b10`.
+- **No pure `#fff` body text.** `fg` is `#e9ebef` (L 0.94) to avoid halation on OLED and in dim
+  rooms. `fg-muted` / `fg-subtle` carry secondary text; `fg-faint` is never readable text.
+- **Accent tuned for dark.** `#63b0fc` (L 0.74, C 0.135) — vivid against the base at 8.6:1, below
+  the neon threshold a saturated light-theme blue would hit on a dark surface. Hover lightens,
+  pressed darkens; both stay within the same hue.
+- **Everything defined for dark explicitly:** borders (`border`, `border-strong` ≥3:1),
+  focus ring (`accent-ring` at 60%), selection, scrollbar thumb and hover, form field surfaces
+  (`bg-elevated` with `border-strong`), code blocks (`code-bg` / `code-fg`), badges, status
+  colours (success / warning / danger each re-picked for dark), and shadows — dark shadows are
+  deeper and tighter (`shadow-popover` adds a 1px rim), plus one `glow-accent` for the hero and
+  focused primary surfaces only.
+- **Images, logos, screenshots and diagrams must read correctly in both themes.** Project
+  screenshots sit inside the browser frame on `bg-elevated` with a `border`; the logo mark and
+  any brand SVGs use `currentColor` or carry a dark variant; the architecture diagram is themed
+  through CSS variables, never baked colours. Anything that only looks right on white gets a
+  treatment (border, backdrop, or a dark export) before it ships.
+- **Contrast in both themes:** every text/surface pair ≥4.5:1, large text and UI boundaries
+  ≥3:1, re-verified in `docs/CONTRAST.md` whenever a token changes.
+- **Theme switch behaviour:** no flash on load (inline script sets `data-theme` before paint);
+  smooth colour transition on toggle (`duration.base`, colour properties only) that collapses
+  under `prefers-reduced-motion`; choice remembered in `localStorage`; system preference
+  respected (`enableSystem`) once every section is converted (Phase 7).
+- **Review gate:** every section and component built from Phase 2 on is screenshotted in
+  **both themes at 360, 768, 1440 and 1920** before its phase is committed. The theme toggle
+  is visible in the main navbar from Phase 2 on, not only on `/styleguide`.
+
 ### 3.3 Typography
 
 Two families, both via `next/font`.
@@ -1404,28 +1439,39 @@ table; check the console on every route.
 **Goal:** dismantle `ClientLayout`, rebuild the shell server-first, and ship the shared
 interaction primitives.
 
-- [ ] Delete `ClientLayout.tsx`. Compose the shell in `app/layout.tsx` as a server component
+- [x] Delete `ClientLayout.tsx`. Compose the shell in `app/layout.tsx` as a server component
       with providers and client islands as leaves.
-- [ ] Add a skip-to-content link as the first focusable element, targeting `#main`.
-- [ ] Rebuild `intro-loader.tsx`: first visit only via `sessionStorage`, ≤1.2 s hard cap,
+- [x] Add a skip-to-content link as the first focusable element, targeting `#main`.
+- [x] Rebuild `intro-loader.tsx`: first visit only via `sessionStorage`, ≤1.2 s hard cap,
       skippable on any key/click/scroll, bypassed under reduced motion, and **it must overlay
       content that is already in the DOM** rather than replace it.
-- [ ] Rewrite `use-active-section.ts` on `IntersectionObserver`.
-- [ ] Rebuild the navbar: server `site-header.tsx`, client islands for the active indicator
+- [x] Rewrite `use-active-section.ts` on `IntersectionObserver`.
+- [x] Rebuild the navbar: server `site-header.tsx`, client islands for the active indicator
       (shared `layoutId` underline) and the mobile sheet. `aria-current` on the active item.
-- [ ] Single source of navigation truth in `src/data/navigation.ts`; footer consumes the same
+      **Theme toggle visible in the navbar** (desktop and inside the mobile menu).
+- [x] Smooth colour transition on theme toggle (`duration.base`, colour properties only),
+      collapsed under reduced motion; verify no flash on a hard reload in either theme.
+- [x] Single source of navigation truth in `src/data/navigation.ts`; footer consumes the same
       module instead of building hrefs from strings.
-- [ ] Create `ui/reveal.tsx` — the one entrance-animation wrapper, reduced-motion aware,
+- [x] Create `ui/reveal.tsx` — the one entrance-animation wrapper, reduced-motion aware,
       `once: true`.
-- [ ] Create `ui/section-header.tsx` and delete all four `sections/*/section-header.tsx` copies.
-- [ ] Rebuild `pop-button`'s press feel using transform plus a shadow-layer opacity, or retire
+- [x] Create `ui/section-header.tsx` and delete all four `sections/*/section-header.tsx` copies.
+- [x] Rebuild `pop-button`'s press feel using transform plus a shadow-layer opacity, or retire
       it in favour of `ui/button.tsx` (already extended in Phase 1).
-- [ ] Create `ui/{tag,tooltip,copy-button,magnetic}.tsx` with their full state sets and add them
+- [x] Create `ui/{tag,tooltip,copy-button,magnetic}.tsx` with their full state sets and add them
       to `/styleguide` (`card`, `badge`, `input`, `textarea`, `text-link` landed in Phase 1).
-- [ ] Add `scroll-progress.tsx` and `back-to-top.tsx`.
-- [ ] Add the command palette (`cmdk`), lazy-loaded on first `⌘K`/`Ctrl+K` or button press.
-- [ ] Add `custom-cursor.tsx`, lazy and gated per §5.4.
-- [ ] Wire `@vercel/analytics` and `@vercel/speed-insights`.
+- [x] Add `scroll-progress.tsx` and `back-to-top.tsx`.
+- [x] Add the command palette (`cmdk`), lazy-loaded on first `⌘K`/`Ctrl+K` or button press.
+- [x] Add `custom-cursor.tsx`, lazy and gated per §5.4.
+- [x] Wire `@vercel/analytics` and `@vercel/speed-insights`.
+- [x] *(Found during the phase)* `pop-button.tsx` is still imported by hero, contact and about
+      sections; it is retired when those sections are rebuilt (Phases 3, 6, 7). New shell uses
+      `ui/button.tsx` only.
+- [x] *(Found during the phase)* `react-icons` still feeds `tech-badge.tsx`, `tech-stack.ts`,
+      `skills-data.ts` and the hero badges — removal stays in Phase 6 as planned.
+- [x] *(Design)* Theme toggle sits in the header on every width and inside the mobile menu;
+      toggling cross-fades colours for `duration.base` via `html[data-theme-transition]`,
+      skipped under reduced motion.
 
 **Files touched:** `src/app/layout.tsx`, `src/components/layout/**`, `src/components/ui/**`,
 `src/hooks/**`, `src/data/navigation.ts`, `src/app/styleguide/page.tsx`, `package.json`.
@@ -1448,6 +1494,10 @@ interaction primitives.
   `env(safe-area-inset-top)`. Every primitive on `/styleguide` is clean at 360, 768 and 1440
   with zero horizontal scroll. Hover-only effects are wrapped in
   `@media (hover: hover) and (pointer: fine)`; tap targets ≥44×44px.
+
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
 
 **How to verify:** full keyboard walkthrough with the mouse unplugged; DevTools network
 panel filtered to JS before and after the first `⌘K`; `grep -rc "use client" src` and read
@@ -1495,6 +1545,10 @@ every hit; `npm run build` route table; axe on `/` and `/styleguide`.
   plus 844×390). Display heading uses `clamp()` and `text-wrap: balance` with no orphaned
   word at any width. Hero section height uses `dvh`/`svh`, not `vh`. Metric tiles 2×3 /
   3×2 / 6×1 with no overflow of `tabular-nums` figures. Marquee one row at `xs`.
+
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
 
 **How to verify:** disable JS in DevTools and reload; Lighthouse trace and read the LCP
 element; performance recording with 6× throttle and the FPS meter during marquee and scroll;
@@ -1545,6 +1599,10 @@ and reload.
   SQL use `overflow-wrap: anywhere`. The diagram SVG scales with `viewBox` and stays
   legible at 280 and 2560.
 
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
+
 **How to verify:** read the page against `docs/CV-PROJECT-NOTES.md` claim by claim; build
 output route table; disable JS; NVDA or VoiceOver pass over the diagram; screenshot at 360px
 and 2560px in both themes; axe.
@@ -1586,6 +1644,10 @@ and 2560px in both themes; axe.
   collapses 3 → 2 → 1 with no overflow; filter chips wrap, never scroll the page. Checked
   across the full matrix.
 
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
+
 **How to verify:** build output route list; load `/projects?tech=nextjs` with JS disabled;
 `grep -rn 'href="#"' src`; record a performance trace while switching filters and check for
 layout-shift entries; Lighthouse both routes.
@@ -1626,6 +1688,10 @@ layout-shift entries; Lighthouse both routes.
 - **Responsive (§3.7):** timeline switches left-rail → centre-rail at `md` with no overlap
   of dates and body at 320 or 844×390. Skill chips wrap within their group. About portrait
   keeps its aspect ratio at every width. Checked across the full matrix.
+
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
 
 **How to verify:** `grep -rn "use client" src/components/sections/{about,skills,principles}`
 returns nothing; axe heading-order check; performance trace while scrolling the timeline with
@@ -1672,6 +1738,10 @@ returns nothing; axe heading-order check; performance trace while scrolling the 
   form/info split stacks below `lg`; toasts respect `env(safe-area-inset-bottom)`;
   `/resume` reflows cleanly at 320 and prints to A4/Letter. Checked across the full matrix.
 
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
+
 **How to verify:** submit empty, then valid, with a screen reader running; submit via `curl`
 with the honeypot filled; `Ctrl+P` on `/resume`; `curl -sI <preview>/does-not-exist | head -1`;
 network panel filtered to `google`.
@@ -1713,6 +1783,10 @@ network panel filtered to `google`.
   `src/lib/site.ts` — `grep -rn "abdulfullstackdev" src` matches only that file.
 - **Responsive (§3.7):** OG images render correctly at 1200×630; no responsive regressions
   introduced (spot-check 360, 768, 1440 on every route).
+
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
 
 **How to verify:** Lighthouse SEO per route; open each `/api/og?...` URL directly; paste the
 JSON-LD into the Rich Results Test; `curl <preview>/sitemap.xml`; walk every route with the
@@ -1760,6 +1834,10 @@ client/server boundaries only).
   `distance.base` and stagger is halved — verified in a 6× throttled trace at 360.
   Spot-check 360, 768, 1440 on every route for regressions from lazy boundaries.
 
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
+
 **How to verify:** three Lighthouse runs per route, median recorded; `ANALYZE=true npm run build`
 reports; performance traces at 6× throttle for scroll, filter and palette interactions; network
 panel JS totals before and after first interaction.
@@ -1798,6 +1876,10 @@ panel JS totals before and after first interaction.
 - **Responsive (§3.7):** the full matrix (280 → 2560 plus 844×390) walked by hand on every
   route in both themes — zero horizontal scroll, no overflow, no overlap, no distorted
   image, no orphaned heading word. Findings fixed in this phase, not deferred.
+
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
 
 **How to verify:** axe per route per theme; the keyboard walkthrough with the mouse physically
 unplugged; a screen-reader recording of the contact-form error and success paths; OS
@@ -1842,6 +1924,10 @@ browser zoom at 400%.
 - The budget step fails the build when a route exceeds its budget — prove it by temporarily
   lowering a budget and watching CI go red.
 - CI green on `flash`.
+
+- **Themes (§3.2.1):** everything built or touched in this phase screenshotted in both
+  themes at 360, 768, 1440 and 1920 — no component relies on a light-only or dark-only
+  colour; images and marks read correctly on both; contrast re-checked for any new pairing.
 
 **How to verify:** run the suite locally; push and read the CI log; deliberately break one
 assertion and confirm CI fails; temporarily tighten a budget and confirm the gate fires.
