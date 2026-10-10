@@ -99,8 +99,11 @@ function Button({
     >
       {loading ? (
         <>
-          {/* Keep the label in the layout (invisible) so width stays locked. */}
-          <span className="invisible inline-flex items-center gap-2">{children}</span>
+          {/* Keep the label in the layout (invisible) so width stays locked, and
+              repeat it for assistive tech — visibility:hidden removes it from
+              the accessible name. */}
+          <span aria-hidden="true" className="invisible inline-flex items-center gap-2">{children}</span>
+          <span className="sr-only">{children}</span>
           <span className="absolute inset-0 flex items-center justify-center">
             <Spinner />
           </span>

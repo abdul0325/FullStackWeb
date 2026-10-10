@@ -205,7 +205,7 @@ function Typography() {
           <div key={cls} className="flex min-w-0 flex-col gap-1">
             <div className="flex flex-wrap items-baseline justify-between gap-x-4">
               <span className="font-mono text-xs text-fg-subtle">{name}</span>
-              <span className="font-mono text-xs text-fg-faint">{value}</span>
+              <span className="font-mono text-xs text-fg-subtle">{value}</span>
             </div>
             <p className={`${cls} break-words text-fg`}>
               {cls === "label" ? "Available for projects" : "Precision engineering"}
